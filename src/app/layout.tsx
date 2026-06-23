@@ -27,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="min-h-screen flex flex-col bg-linear-to-b from-(--background-from) to-(--background-to) text-white">
+      <body className="min-h-screen flex flex-col bg-(--background) text-(--text-primary)">
         <Script src="https://kit.fontawesome.com/235f170a74.js" crossOrigin="anonymous"></Script>
         <Header />
         <main className="flex-1">{children}</main>
