@@ -1,5 +1,5 @@
 import { Venue } from "@/types/venue";
-import VenueCard from "@/components/Venues/VenueCard";
+import VenueCard from "@/components/venues/VenueCard";
 
 const tempVenues: Venue[] = [
   {

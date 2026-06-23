@@ -1,5 +1,5 @@
 import Link from "next/link";
-import VenueGrid from "@/components/Venues/VenueGrid";
+import VenueGrid from "@/components/venues/VenueGrid";
 
 export default function PopularVenues() {
   return (
