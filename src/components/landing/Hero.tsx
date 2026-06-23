@@ -1,6 +1,6 @@
 export default function Hero() {
   return (
-    <section className="flex justify-center py-14 text-center bg-[url('/images/hero-image.webp')] bg-cover bg-center bg-no-repeat">
+    <section className="flex justify-center px-6 py-14 text-center bg-[url('/images/hero-image.webp')] bg-cover bg-center bg-no-repeat">
       <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col items-center gap-2 bg-(--background-soft)/75 rounded-lg">
         <h1 className="text-2xl lg:text-3xl font-bold text-(--text-primary)">Find your perfect getaway</h1>
         <p className="text-(--text-secondary)">Search for venues, check availability and book with confidence.</p>
