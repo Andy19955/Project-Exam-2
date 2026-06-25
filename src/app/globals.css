@@ -3,6 +3,8 @@
 :root {
   --background: #faf8f3;
   --background-soft: #f4efe6;
+  --background-dark: #020618;
+  --background-dark-soft: #1d293d;
 
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
@@ -22,9 +24,11 @@
   --text-primary: #172033;
   --text-secondary: #475569;
   --text-muted: #475569;
+  --text-light: #cad5e2;
 
   --surface: #ffffff;
-  --surface-hover: #f8fafc;
+  --surface-dark: #f8fafc;
 
   --border: #e2e8f0;
+  --border-dark: #90a1b9;
 }
