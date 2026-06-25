@@ -14,7 +14,7 @@ export default function VenueCard({ venue }: { venue: Venue }) {
           <Link
             key={venue.id}
             href={`/venue/${venue.id}`}
-            className="border border-(--border) text-(--text-secondary) border-solid rounded-lg px-3 py-2 hover:bg-(--surface-hover) transition-colors duration-200"
+            className="border border-(--border) text-(--text-secondary) border-solid rounded-lg px-3 py-2 hover:bg-(--surface-dark) transition-colors duration-200"
           >
             View
           </Link>
