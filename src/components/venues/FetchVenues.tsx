@@ -57,7 +57,7 @@ export default function FetchVenues({ showGrid = true, limit, enableLoadMore = f
                 <button
                   type="button"
                   onClick={() => setVisibleCount((currentCount) => currentCount + 20)}
-                  className="rounded-full border border-(--border-dark) bg-white px-6 py-3 text-sm font-semibold text-(--text-primary) shadow-sm transition hover:bg-(--surface-dark)"
+                  className="rounded-full border border-(--border-dark) bg-white px-6 py-3 cursor-pointer text-sm font-semibold text-(--text-primary) shadow-sm transition hover:bg-(--surface-dark)"
                 >
                   Load More Venues
                 </button>

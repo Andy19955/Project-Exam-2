@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import BookingForm from "@/app/venue/[id]/BookingForm";
+import { amenities } from "@/constants/amenities";
 
 const demoData = {
   id: "1",
@@ -40,25 +41,6 @@ const demoData = {
     continent: "Demo Continent",
     lat: 12.345678,
     long: 98.7654321,
-  },
-};
-
-const amenities = {
-  wifi: {
-    icon: "fa fa-wifi",
-    label: "Wi-Fi",
-  },
-  parking: {
-    icon: "fa fa-car",
-    label: "Parking",
-  },
-  breakfast: {
-    icon: "fa fa-coffee",
-    label: "Breakfast",
-  },
-  pets: {
-    icon: "fa fa-paw",
-    label: "Pets allowed",
   },
 };
 
