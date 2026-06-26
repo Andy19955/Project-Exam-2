@@ -21,7 +21,7 @@ export default function VenueCard({ venue }: { venue: Venue }) {
                 value
                   ? (() => {
                       const amenity = amenities[key as keyof typeof amenities];
-                      return <i className={amenity.icon} title={amenity.label}></i>;
+                      return <i key={key} className={amenity.icon} title={amenity.label}></i>;
                     })()
                   : null,
               )}
