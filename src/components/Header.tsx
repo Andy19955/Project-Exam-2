@@ -10,7 +10,7 @@ export default function Header() {
   return (
     <header className="w-full px-6 py-4 bg-white border-b border-(--border) shadow-md">
       <MobileMenu open={open} onClose={() => setOpen(false)} />
-      <div className="flex items-center justify-between max-w-6xl mx-auto">
+      <div className="flex items-center justify-between max-w-7xl mx-auto">
         <Link href="/" className="text-xl font-bold">
           Holidaze
         </Link>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import BookingForm from "@/app/venue/[id]/BookingForm";
+import { amenities } from "@/constants/amenities";
 
 const demoData = {
   id: "1",
@@ -43,31 +44,12 @@ const demoData = {
   },
 };
 
-const amenities = {
-  wifi: {
-    icon: "fa fa-wifi",
-    label: "Wi-Fi",
-  },
-  parking: {
-    icon: "fa fa-car",
-    label: "Parking",
-  },
-  breakfast: {
-    icon: "fa fa-coffee",
-    label: "Breakfast",
-  },
-  pets: {
-    icon: "fa fa-paw",
-    label: "Pets allowed",
-  },
-};
-
 export default function VenuePage() {
   return (
     <div className="px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl flex flex-col gap-6">
+      <div className="mx-auto max-w-7xl flex flex-col gap-6">
         <Link
-          href="/venues/"
+          href="/"
           className="flex items-center gap-2 rounded-full w-fit border border-(--border-dark) bg-(--surface) px-4 py-2 text-sm font-semibold text-(--text-primary) shadow-sm transition hover:bg-(--surface-dark)"
         >
           <i className="fa fa-arrow-left"></i>Go back to all venues
