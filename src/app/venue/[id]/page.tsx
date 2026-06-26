@@ -65,9 +65,9 @@ const amenities = {
 export default function VenuePage() {
   return (
     <div className="px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl flex flex-col gap-6">
+      <div className="mx-auto max-w-7xl flex flex-col gap-6">
         <Link
-          href="/venues/"
+          href="/"
           className="flex items-center gap-2 rounded-full w-fit border border-(--border-dark) bg-(--surface) px-4 py-2 text-sm font-semibold text-(--text-primary) shadow-sm transition hover:bg-(--surface-dark)"
         >
           <i className="fa fa-arrow-left"></i>Go back to all venues
