@@ -136,7 +136,7 @@ export default function VenueDetails({ id }: { id: string }) {
               </div>
               <p className="text-sm leading-6 text-(--text-light)">Book your stay with a clean, fast checkout flow and instant reservation details.</p>
             </div>
-            <BookingForm maxGuests={venue.maxGuests} />
+            <BookingForm maxGuests={venue.maxGuests} price={venue.price} />
           </div>
         </aside>
       </div>
