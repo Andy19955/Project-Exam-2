@@ -4,6 +4,8 @@ import Link from "next/link";
 import { amenities } from "@/constants/amenities";
 
 export default function VenueCard({ venue }: { venue: Venue }) {
+  const locationText = venue.location.city && venue.location.country ? `${venue.location.city}, ${venue.location.country}` : venue.location.city || venue.location.country || "Location not available";
+
   return (
     <article className="flex flex-col shadow-md rounded-lg border border-(--border) bg-(--surface)">
       <Image src={venue.media[0]?.url || "/placeholder.jpg"} alt={venue.media[0]?.alt || venue.name} width={340} height={160} className="object-cover rounded-t-lg w-full min-h-40" />
@@ -12,7 +14,7 @@ export default function VenueCard({ venue }: { venue: Venue }) {
         <div className="flex flex-col gap-1">
           <p className="text-sm text-(--text-secondary)">
             <i className="fas fa-map-marker-alt mr-1"></i>
-            {venue.location.city}, {venue.location.country}
+            {locationText}
           </p>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center justify-between">
             <span className="font-semibold">${venue.price.toFixed(2)} / night</span>
@@ -28,7 +30,6 @@ export default function VenueCard({ venue }: { venue: Venue }) {
             </div>
           </div>
           <Link
-            key={venue.id}
             href={`/venue/${venue.id}`}
             className="border border-(--secondary) hover:border-(--secondary-hover) text-(--secondary) hover:text-white mt-3 font-semibold border-solid text-center rounded-lg px-3 py-1 hover:bg-(--secondary-hover) transition-colors duration-200"
           >
