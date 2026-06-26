@@ -1,5 +1,6 @@
 import { Media } from "@/types/media";
 import { Profile } from "@/types/profile";
+import { Booking } from "@/types/booking";
 
 export interface Venue {
   id: string;
@@ -27,4 +28,5 @@ export interface Venue {
     long: number;
   };
   owner: Profile;
+  bookings: Booking[];
 }

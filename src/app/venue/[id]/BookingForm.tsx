@@ -1,10 +1,38 @@
 "use client";
+import { Booking } from "@/types/booking";
 import { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
 type DateValuePiece = Date | null;
 type DateValue = DateValuePiece | [DateValuePiece, DateValuePiece];
+
+function parseBookingDate(dateString: string) {
+  const [datePart] = dateString.split("T");
+  const [year, month, day] = datePart.split("-").map(Number);
+
+  return new Date(year, month - 1, day);
+}
+
+function startOfDay(date: Date) {
+  const normalizedDate = new Date(date);
+  normalizedDate.setHours(0, 0, 0, 0);
+  return normalizedDate;
+}
+
+function isBookedDay(date: Date, bookings: Booking[]) {
+  const day = startOfDay(date).getTime();
+  const today = startOfDay(new Date()).getTime();
+
+  return bookings.some((booking) => {
+    const bookingStart = parseBookingDate(booking.dateFrom).getTime();
+    const bookingEnd = parseBookingDate(booking.dateTo).getTime();
+
+    if (bookingEnd <= today) return false;
+
+    return day >= Math.max(bookingStart, today) && day < bookingEnd;
+  });
+}
 
 function formatDate(date: Date | null) {
   if (!date) return "Not selected";
@@ -31,21 +59,76 @@ function getNights(dateRange: DateValue) {
   return Math.max(0, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
 }
 
-export default function BookingForm({ maxGuests, price }: { maxGuests: number; price: number }) {
+export default function BookingForm({ maxGuests, price, bookings }: { maxGuests: number; price: number; bookings: Booking[] }) {
   const [dateRange, setDateRange] = useState<DateValue>(null);
   const [guestCount, setGuestCount] = useState(1);
+  const [selectionError, setSelectionError] = useState(false);
 
   const nights = getNights(dateRange);
-  const isValidStay = nights >= 1;
-  const total = isValidStay ? price * nights * guestCount : 0;
   const checkIn = Array.isArray(dateRange) ? dateRange[0] : null;
   const checkOut = Array.isArray(dateRange) ? dateRange[1] : null;
   const hasCompleteRange = Boolean(checkIn && checkOut);
 
+  const overlapsBookedRange = Boolean(
+    hasCompleteRange &&
+    Array.isArray(dateRange) &&
+    bookings.some((booking) => {
+      const rangeStart = startOfDay(checkIn as Date).getTime();
+      const rangeEnd = startOfDay(checkOut as Date).getTime();
+      const bookingStart = Math.max(startOfDay(parseBookingDate(booking.dateFrom)).getTime(), startOfDay(new Date()).getTime());
+      const bookingEnd = startOfDay(parseBookingDate(booking.dateTo)).getTime();
+
+      if (bookingEnd <= startOfDay(new Date()).getTime()) return false;
+
+      return rangeStart < bookingEnd && rangeEnd > bookingStart;
+    }),
+  );
+
+  const isValidStay = nights >= 1 && !overlapsBookedRange;
+  const total = isValidStay ? price * nights * guestCount : 0;
+
+  const disableBookedDates = ({ date, view }: { date: Date; view: string }) => view === "month" && isBookedDay(date, bookings);
+
+  const handleDateChange = (value: DateValue) => {
+    if (!Array.isArray(value)) {
+      setDateRange(value);
+      setSelectionError(false);
+      return;
+    }
+
+    const [nextCheckIn, nextCheckOut] = value;
+
+    if (!nextCheckIn || !nextCheckOut) {
+      setDateRange(value);
+      setSelectionError(false);
+      return;
+    }
+
+    const rangeStart = startOfDay(nextCheckIn).getTime();
+    const rangeEnd = startOfDay(nextCheckOut).getTime();
+    const rangeOverlapsBooking = bookings.some((booking) => {
+      const bookingStart = Math.max(startOfDay(parseBookingDate(booking.dateFrom)).getTime(), startOfDay(new Date()).getTime());
+      const bookingEnd = startOfDay(parseBookingDate(booking.dateTo)).getTime();
+
+      if (bookingEnd <= startOfDay(new Date()).getTime()) return false;
+
+      return rangeStart < bookingEnd && rangeEnd > bookingStart;
+    });
+
+    if (rangeOverlapsBooking || rangeEnd <= rangeStart) {
+      setDateRange(nextCheckIn);
+      setSelectionError(true);
+      return;
+    }
+
+    setDateRange(value);
+    setSelectionError(false);
+  };
+
   return (
     <form className="flex flex-col gap-4 px-4 py-6">
-      <Calendar onChange={setDateRange} value={dateRange} selectRange={true} minDate={new Date()} className="min-w-full rounded-lg" />
-      {hasCompleteRange && !isValidStay ? <p className="text-sm font-medium text-amber-700">A booking must span at least one night. Choose a checkout date after the check-in date.</p> : null}
+      <Calendar onChange={handleDateChange} value={dateRange} selectRange={true} minDate={new Date()} tileDisabled={disableBookedDates} className="min-w-full rounded-lg" />
+      {selectionError ? <p className="text-sm font-medium text-amber-700">A booking must stay within an available date range. Choose dates that do not cross an occupied period.</p> : null}
       <div className="grid gap-3 rounded-3xl border border-(--border) bg-(--surface-dark) p-4 text-sm text-(--text-primary)">
         <div className="flex items-center justify-between gap-4">
           <span className="font-medium text-(--text-secondary)">Check-in</span>

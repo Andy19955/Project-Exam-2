@@ -15,7 +15,7 @@ export default function VenueDetails({ id }: { id: string }) {
   useEffect(() => {
     const fetchSingleVenue = async () => {
       try {
-        const response = await fetch(`https://v2.api.noroff.dev/holidaze/venues/${id}?_owner=true`);
+        const response = await fetch(`https://v2.api.noroff.dev/holidaze/venues/${id}?_owner=true&_bookings=true`);
         const result = await response.json();
         if (!response.ok || result?.errors || !result?.data) {
           setNotFound(true);
@@ -136,7 +136,7 @@ export default function VenueDetails({ id }: { id: string }) {
               </div>
               <p className="text-sm leading-6 text-(--text-light)">Book your stay with a clean, fast checkout flow and instant reservation details.</p>
             </div>
-            <BookingForm maxGuests={venue.maxGuests} price={venue.price} />
+            <BookingForm maxGuests={venue.maxGuests} price={venue.price} bookings={venue.bookings} />
           </div>
         </aside>
       </div>
