@@ -1,10 +1,11 @@
 import { Media } from "@/types/media";
+import { Profile } from "@/types/profile";
 
 export interface Venue {
   id: string;
   name: string;
   description: string;
-  media: Media[];
+  media?: Media[];
   price: number;
   maxGuests: number;
   rating: number;
@@ -25,4 +26,5 @@ export interface Venue {
     lat: number;
     long: number;
   };
+  owner: Profile;
 }
