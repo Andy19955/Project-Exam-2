@@ -1,13 +1,11 @@
 import Hero from "@/components/landing/Hero";
-import PopularVenues from "@/components/landing/PopularVenues";
-import Features from "@/components/landing/Features";
+import Venues from "@/components/landing/Venues";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <PopularVenues />
-      <Features />
+      <Venues />
     </>
   );
 }

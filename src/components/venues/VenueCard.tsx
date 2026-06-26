@@ -4,11 +4,13 @@ import Link from "next/link";
 
 export default function VenueCard({ venue }: { venue: Venue }) {
   return (
-    <article className="flex flex-col box-shadow-md rounded-lg bg-(--surface)">
-      <Image src={venue.media[0]?.url || ""} alt={venue.media[0]?.alt || venue.name} width={340} height={160} className="object-cover rounded-t-lg w-full h-40" />
-      <div className="p-4">
-        <h3 className="text-lg font-bold mb-1">{venue.name}</h3>
-        <p className="text-(--text-secondary)">{venue.description}</p>
+    <article className="flex flex-col shadow-md rounded-lg border border-(--border) bg-(--surface)">
+      <Image src={venue.media[0]?.url || "/placeholder.jpg"} alt={venue.media[0]?.alt || venue.name} width={340} height={160} className="object-cover rounded-t-lg w-full min-h-40" />
+      <div className="flex flex-col justify-between h-full p-4">
+        <div>
+          <h3 className="text-lg font-bold mb-1">{venue.name}</h3>
+          <p className="text-(--text-secondary) line-clamp-3">{venue.description}</p>
+        </div>
         <div className="flex items-center justify-between mt-3">
           <span className="font-semibold">${venue.price.toFixed(2)}</span>
           <Link
