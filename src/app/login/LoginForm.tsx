@@ -66,11 +66,7 @@ export default function LoginForm() {
           autoComplete="email"
           className={`rounded-md border px-4 py-2 focus:outline-none focus:ring-2 ${fieldErrors.email ? "border-(--error) focus:ring-(--error)" : "border-gray-300 focus:ring-blue-500"}`}
         />
-        {fieldErrors.email ? (
-          <p className="text-sm text-(--error)" role="alert">
-            {fieldErrors.email}
-          </p>
-        ) : null}
+        {fieldErrors.email ? <p className="text-sm text-(--error)">{fieldErrors.email}</p> : null}
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="password" className="font-semibold">
@@ -84,17 +80,9 @@ export default function LoginForm() {
           autoComplete="current-password"
           className={`rounded-md border px-4 py-2 focus:outline-none focus:ring-2 ${fieldErrors.password ? "border-(--error) focus:ring-(--error)" : "border-gray-300 focus:ring-blue-500"}`}
         />
-        {fieldErrors.password ? (
-          <p className="text-sm text-(--error)" role="alert">
-            {fieldErrors.password}
-          </p>
-        ) : null}
+        {fieldErrors.password ? <p className="text-sm text-(--error)">{fieldErrors.password}</p> : null}
       </div>
-      {formError ? (
-        <div className="rounded-md bg-(--background-error) p-3 text-sm text-(--error)" role="alert">
-          {formError}
-        </div>
-      ) : null}
+      {formError ? <div className="rounded-md bg-(--background-error) p-3 text-sm text-(--error)">{formError}</div> : null}
       <button
         type="submit"
         disabled={isSubmitting}
