@@ -1,22 +1,106 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { userLogin } from "@/api/auth/userLogin";
+import { loginFormSchema, type LoginData } from "@/schemas/loginFormSchema";
+import saveLocalStorage from "@/api/helpers/saveLocalStorage";
+import { z } from "zod";
+
+type FieldErrors = Partial<Record<keyof LoginData, string>>;
+
 export default function LoginForm() {
+  const router = useRouter();
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [formError, setFormError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    setFieldErrors({});
+    setFormError("");
+
+    const formData = new FormData(event.currentTarget);
+    const formValues = {
+      email: String(formData.get("email") ?? ""),
+      password: String(formData.get("password") ?? ""),
+    };
+
+    const validationResult = loginFormSchema.safeParse(formValues);
+
+    if (!validationResult.success) {
+      const flattenedErrors = z.flattenError(validationResult.error);
+      setFieldErrors({
+        email: flattenedErrors.fieldErrors.email?.[0],
+        password: flattenedErrors.fieldErrors.password?.[0],
+      });
+
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await userLogin(validationResult.data);
+      saveLocalStorage("accessToken", response.data.accessToken);
+      router.push("/");
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : "Login failed");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
-    <form className="flex flex-col gap-4">
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit} noValidate>
       <div className="flex flex-col gap-2">
         <label htmlFor="email" className="font-semibold">
           Email
         </label>
-        <input type="email" id="email" placeholder="Enter your email" className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter your email"
+          autoComplete="email"
+          className={`rounded-md border px-4 py-2 focus:outline-none focus:ring-2 ${fieldErrors.email ? "border-(--error) focus:ring-(--error)" : "border-gray-300 focus:ring-blue-500"}`}
+        />
+        {fieldErrors.email ? (
+          <p className="text-sm text-(--error)" role="alert">
+            {fieldErrors.email}
+          </p>
+        ) : null}
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="password" className="font-semibold">
           Password
         </label>
-        <input type="password" id="password" placeholder="Enter your password" className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter your password"
+          autoComplete="current-password"
+          className={`rounded-md border px-4 py-2 focus:outline-none focus:ring-2 ${fieldErrors.password ? "border-(--error) focus:ring-(--error)" : "border-gray-300 focus:ring-blue-500"}`}
+        />
+        {fieldErrors.password ? (
+          <p className="text-sm text-(--error)" role="alert">
+            {fieldErrors.password}
+          </p>
+        ) : null}
       </div>
-      <button type="submit" className="bg-blue-500 text-white py-2 px-4 font-semibold rounded-md hover:bg-blue-600 cursor-pointer transition-colors duration-200">
-        Login
+      {formError ? (
+        <div className="rounded-md bg-(--background-error) p-3 text-sm text-(--error)" role="alert">
+          {formError}
+        </div>
+      ) : null}
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="cursor-pointer rounded-md bg-blue-500 px-4 py-2 font-semibold text-white transition-colors duration-200 hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-70"
+      >
+        {isSubmitting ? "Logging in..." : "Login"}
       </button>
     </form>
   );
