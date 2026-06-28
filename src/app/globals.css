@@ -18,8 +18,9 @@
   --success: #16a34a;
   --success-hover: #15803d;
 
-  --error: #dc2626;
+  --error: #f10101;
   --error-hover: #b91c1c;
+  --background-error: #fee2e2;
 
   --text-primary: #172033;
   --text-secondary: #475569;
