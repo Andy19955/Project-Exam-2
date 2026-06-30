@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-export default function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function MobileMenu({ open, onClose, isLoggedIn, onLogout }: { open: boolean; onClose: () => void; isLoggedIn: boolean; onLogout: () => void }) {
   if (!open) return null;
 
   return (
@@ -12,12 +12,25 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
           <i className="fas fa-xmark text-2xl"></i>
         </button>
         <nav className="flex flex-col gap-6">
-          <Link href="/login" onClick={onClose} className="text-2xl font-semibold text-white">
-            Login
-          </Link>
-          <Link href="/register" onClick={onClose} className="text-2xl font-semibold text-white/90">
-            Register
-          </Link>
+          {isLoggedIn ? (
+            <>
+              <Link href="/profile" onClick={onClose} className="text-2xl font-semibold text-white">
+                Profile
+              </Link>
+              <button onClick={onLogout} className="cursor-pointer text-2xl font-semibold text-white">
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/login" onClick={onClose} className="text-2xl font-semibold text-white">
+                Login
+              </Link>
+              <Link href="/register" onClick={onClose} className="text-2xl font-semibold text-white">
+                Register
+              </Link>
+            </>
+          )}
         </nav>
       </div>
     </div>
