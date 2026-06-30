@@ -1,27 +1,36 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useSyncExternalStore } from "react";
 import { AuthContextType, User } from "@/types/authContextType";
-import loadLocalStorage from "@/api/helpers/loadLocalStorage";
 import saveLocalStorage from "@/api/helpers/saveLocalStorage";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(() => {
-    const accessToken = loadLocalStorage("accessToken");
+function subscribe(callback: () => void) {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
 
-    return accessToken ? { accessToken } : null;
-  });
+function getSnapshot() {
+  return localStorage.getItem("accessToken");
+}
+
+function getServerSnapshot() {
+  return null;
+}
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const accessToken = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const user: User | null = accessToken ? { accessToken } : null;
 
   const login = (userData: User) => {
     saveLocalStorage("accessToken", userData.accessToken);
-    setUser(userData);
+    window.dispatchEvent(new Event("storage"));
   };
 
   const logout = () => {
     localStorage.removeItem("accessToken");
-    setUser(null);
+    window.dispatchEvent(new Event("storage"));
   };
 
   return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
