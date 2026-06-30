@@ -53,7 +53,7 @@ export default function LoginForm() {
   }
 
   return (
-    <form className="flex flex-col gap-4" onSubmit={handleSubmit} noValidate>
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-2">
         <label htmlFor="email" className="font-semibold">
           Email
@@ -65,6 +65,7 @@ export default function LoginForm() {
           placeholder="Enter your email"
           autoComplete="email"
           className={`rounded-md border px-4 py-2 focus:outline-none focus:ring-2 ${fieldErrors.email ? "border-(--error) focus:ring-(--error)" : "border-gray-300 focus:ring-blue-500"}`}
+          required
         />
         {fieldErrors.email ? <p className="text-sm text-(--error)">{fieldErrors.email}</p> : null}
       </div>
@@ -79,6 +80,7 @@ export default function LoginForm() {
           placeholder="Enter your password"
           autoComplete="current-password"
           className={`rounded-md border px-4 py-2 focus:outline-none focus:ring-2 ${fieldErrors.password ? "border-(--error) focus:ring-(--error)" : "border-gray-300 focus:ring-blue-500"}`}
+          required
         />
         {fieldErrors.password ? <p className="text-sm text-(--error)">{fieldErrors.password}</p> : null}
       </div>
