@@ -1,12 +1,13 @@
+import { signInUrl } from "@/constants/apiUrls";
 import type { LoginData } from "@/schemas/loginFormSchema";
 
-export async function userLogin(credentials: LoginData) {
-  const response = await fetch("https://v2.api.noroff.dev/auth/login?_holidaze=true", {
+export async function userLogin(loginData: LoginData) {
+  const response = await fetch(signInUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(credentials),
+    body: JSON.stringify(loginData),
   });
 
   const result = await response.json();
