@@ -4,6 +4,7 @@ import "./globals.css";
 import Script from "next/script";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { AuthProvider } from "@/context/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,8 +30,10 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="min-h-screen flex flex-col bg-(--background) text-(--text-primary)">
         <Script src="https://kit.fontawesome.com/235f170a74.js" crossOrigin="anonymous"></Script>
-        <Header />
-        <main className="flex-1">{children}</main>
+        <AuthProvider>
+          <Header />
+          <main className="flex-1">{children}</main>
+        </AuthProvider>
         <Footer />
       </body>
     </html>
