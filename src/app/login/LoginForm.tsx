@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { userLogin } from "@/api/auth/userLogin";
 import { loginFormSchema, type LoginData } from "@/schemas/loginFormSchema";
@@ -11,9 +11,11 @@ type FieldErrors = Partial<Record<keyof LoginData, string>>;
 
 export default function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const showRegistrationSuccess = searchParams.get("registered") === "1";
 
   async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -54,6 +56,7 @@ export default function LoginForm() {
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+      {showRegistrationSuccess ? <div className="rounded-md bg-green-50 p-3 text-sm text-green-700">Registration successful. You can log in now.</div> : null}
       <div className="flex flex-col gap-2">
         <label htmlFor="email" className="font-semibold">
           Email
