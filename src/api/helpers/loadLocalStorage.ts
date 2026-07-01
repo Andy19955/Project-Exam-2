@@ -1,3 +1,4 @@
 export default function loadLocalStorage(key: string) {
-  return localStorage.getItem(key);
+  const value = localStorage.getItem(key);
+  return value;
 }
