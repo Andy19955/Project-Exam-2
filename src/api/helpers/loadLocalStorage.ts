@@ -1,4 +1,7 @@
 export default function loadLocalStorage(key: string) {
-  const value = localStorage.getItem(key);
-  return value;
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  return localStorage.getItem(key);
 }
