@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-export default function MobileMenu({ open, onClose, isLoggedIn, onLogout }: { open: boolean; onClose: () => void; isLoggedIn: boolean; onLogout: () => void }) {
+export default function MobileMenu({ open, onClose, isLoggedIn, onLogout, name }: { open: boolean; onClose: () => void; isLoggedIn: boolean; onLogout: () => void; name: string }) {
   if (!open) return null;
 
   return (
@@ -14,7 +14,7 @@ export default function MobileMenu({ open, onClose, isLoggedIn, onLogout }: { op
         <nav className="flex flex-col gap-6">
           {isLoggedIn ? (
             <>
-              <Link href="/profile" onClick={onClose} className="text-2xl font-semibold text-white">
+              <Link href={`/profiles/${name}`} onClick={onClose} className="text-2xl font-semibold text-white">
                 Profile
               </Link>
               <button onClick={onLogout} className="cursor-pointer text-2xl font-semibold text-white">
