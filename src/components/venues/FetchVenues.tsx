@@ -5,9 +5,9 @@ import { Venue } from "@/types/venue";
 import { FetchVenuesProps } from "@/types/fetchVenuesProps";
 import VenueCard from "@/components/venues/VenueCard";
 import CardSkeleton from "@/components/CardSkeleton";
+import { venuesUrl } from "@/constants/apiUrls";
 
 export default function FetchVenues({ showGrid = true, limit, enableLoadMore = false }: FetchVenuesProps) {
-  const url = "https://v2.api.noroff.dev/holidaze/venues";
   const [venues, setVenues] = useState<Venue[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -17,7 +17,7 @@ export default function FetchVenues({ showGrid = true, limit, enableLoadMore = f
   useEffect(() => {
     const fetchVenues = async () => {
       try {
-        const response = await fetch(url);
+        const response = await fetch(venuesUrl);
         const data = await response.json();
 
         setVenues(data.data);
