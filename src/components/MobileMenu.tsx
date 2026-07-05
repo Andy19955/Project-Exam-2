@@ -14,7 +14,7 @@ export default function MobileMenu({ open, onClose, isLoggedIn, onLogout, name }
         <nav className="flex flex-col gap-6">
           {isLoggedIn ? (
             <>
-              <Link href={`/profiles/${name}`} onClick={onClose} className="text-2xl font-semibold text-white">
+              <Link href={`/profile/${name}`} onClick={onClose} className="text-2xl font-semibold text-white">
                 Profile
               </Link>
               <button onClick={onLogout} className="cursor-pointer text-2xl font-semibold text-white">

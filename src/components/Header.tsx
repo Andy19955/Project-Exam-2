@@ -20,7 +20,7 @@ export default function Header() {
         <nav className="hidden md:flex items-center gap-3">
           {user ? (
             <>
-              <Link href={`/profiles/${user?.name}`} className="hover:text-(--text-secondary) hover:underline transition-colors duration-200">
+              <Link href={`/profile/${user?.name}`} className="hover:text-(--text-secondary) hover:underline transition-colors duration-200">
                 Profile
               </Link>
               <button onClick={logout} className="cursor-pointer hover:text-(--text-secondary) hover:underline transition-colors duration-200">
