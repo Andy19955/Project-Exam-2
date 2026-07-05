@@ -48,7 +48,6 @@ export default function LoginForm() {
         email: response.data.email,
         venueManager: response.data.venueManager,
       };
-      console.log(response.data);
       useAuthStore.getState().setAuth(response.data.accessToken, userData);
       router.push("/");
     } catch (error) {
