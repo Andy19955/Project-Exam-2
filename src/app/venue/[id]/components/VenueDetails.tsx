@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Venue } from "@/types/venue";
 import { amenities } from "@/constants/amenities";
 import Image from "next/image";
-import BookingForm from "@/app/venue/[id]/BookingForm";
+import BookingForm from "@/app/venue/[id]/components/BookingForm";
 
 export default function VenueDetails({ id }: { id: string }) {
   const [venue, setVenue] = useState<Venue | null>(null);

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Venue } from "@/types/venue";
 import { FetchVenuesProps } from "@/types/fetchVenuesProps";
 import VenueCard from "@/components/venues/VenueCard";
-import VenueCardSkeleton from "./VenueCardSkeleton";
+import CardSkeleton from "@/components/CardSkeleton";
 
 export default function FetchVenues({ showGrid = true, limit, enableLoadMore = false }: FetchVenuesProps) {
   const url = "https://v2.api.noroff.dev/holidaze/venues";
@@ -42,7 +42,7 @@ export default function FetchVenues({ showGrid = true, limit, enableLoadMore = f
         loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
             {Array.from({ length: Math.min(initialVisibleCount, 12) }).map((_, index) => (
-              <VenueCardSkeleton key={`skel-${index}`} />
+              <CardSkeleton key={`skel-${index}`} />
             ))}
           </div>
         ) : visibleVenues.length > 0 ? (

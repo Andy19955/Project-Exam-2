@@ -3,16 +3,17 @@
 import Link from "next/link";
 import { useState } from "react";
 import MobileMenu from "./MobileMenu";
-import { useAuth } from "@/context/AuthContext";
+import { useAuthStore } from "@/store/authStore";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.clearAuth);
 
   return (
-    <header className="w-full px-6 py-4 bg-white border-b border-(--border) shadow-md">
+    <header className="w-full flex items-center justify-between px-6 py-4 bg-white border-b border-(--border) shadow-md min-h-20">
       <MobileMenu open={open} onClose={() => setOpen(false)} isLoggedIn={Boolean(user)} onLogout={logout} />
-      <div className="flex items-center justify-between max-w-7xl mx-auto">
+      <div className="flex items-center justify-between max-w-7xl w-full mx-auto">
         <Link href="/" className="text-xl font-bold">
           Holidaze
         </Link>

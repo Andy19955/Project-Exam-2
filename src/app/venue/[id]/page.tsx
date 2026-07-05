@@ -1,5 +1,5 @@
 import Link from "next/link";
-import VenueDetails from "@/app/venue/VenueDetails";
+import VenueDetails from "@/app/venue/[id]/components/VenueDetails";
 
 export default async function VenuePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
