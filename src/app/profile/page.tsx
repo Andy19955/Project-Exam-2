@@ -5,9 +5,11 @@ import { Profile as ProfileType } from "@/types/profile";
 import { fetchProfile } from "@/api/profiles/fetchProfile";
 import ProfileHeader from "./components/ProfileHeader";
 import { useAuthStore } from "@/store/authStore";
+import UpcomingBookings from "./components/UpcomingBookings";
 
 export default function Profile() {
   const user = useAuthStore((state) => state.user);
+  const hydrated = useAuthStore((state) => state.hydrated);
 
   const [profile, setProfile] = useState<ProfileType | null>(null);
   const [loading, setLoading] = useState(true);
@@ -15,10 +17,10 @@ export default function Profile() {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    if (!hydrated || !user?.name) return;
     const fetchProfileData = async () => {
       try {
         const result = await fetchProfile(user?.name || "");
-
         if (!result?.data) {
           setNotFound(true);
           return;
@@ -33,7 +35,7 @@ export default function Profile() {
     };
 
     fetchProfileData();
-  }, [user?.name]);
+  }, [hydrated, user?.name]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -42,6 +44,7 @@ export default function Profile() {
   return (
     <>
       <ProfileHeader profile={profile} />
+      <UpcomingBookings />
     </>
   );
 }

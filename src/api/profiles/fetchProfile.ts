@@ -13,7 +13,7 @@ export async function fetchProfile(name: string) {
     throw new Error("Access token is not available");
   }
 
-  const response = await fetch(`${profileUrl}/${name}`, {
+  const response = await fetch(`${profileUrl}/${name}/?_bookings=true&_venues=true`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

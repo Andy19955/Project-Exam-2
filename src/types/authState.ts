@@ -7,4 +7,6 @@ export interface AuthState {
   } | null;
   setAuth: (token: string, user: AuthState["user"]) => void;
   clearAuth: () => void;
+  hydrated: boolean;
+  setHydrated: (v: boolean) => void;
 }

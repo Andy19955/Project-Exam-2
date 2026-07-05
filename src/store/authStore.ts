@@ -7,6 +7,9 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       token: null,
       user: null,
+      hydrated: false,
+
+      setHydrated: (v) => set({ hydrated: v }),
 
       setAuth: (token, user) => {
         set({ token, user });
@@ -18,6 +21,9 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "auth",
+      onRehydrateStorage: () => (state) => {
+        state?.setHydrated(true);
+      },
     },
   ),
 );
