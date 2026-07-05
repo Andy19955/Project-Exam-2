@@ -12,7 +12,7 @@ export default function Header() {
 
   return (
     <header className="w-full flex items-center justify-between px-6 py-4 bg-white border-b border-(--border) shadow-md min-h-20">
-      <MobileMenu open={open} onClose={() => setOpen(false)} isLoggedIn={Boolean(user)} onLogout={logout} name={String(user?.name)} />
+      <MobileMenu open={open} onClose={() => setOpen(false)} isLoggedIn={Boolean(user)} onLogout={logout} />
       <div className="flex items-center justify-between max-w-7xl w-full mx-auto">
         <Link href="/" className="text-xl font-bold">
           Holidaze

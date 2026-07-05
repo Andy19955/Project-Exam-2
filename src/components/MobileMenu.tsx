@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-export default function MobileMenu({ open, onClose, isLoggedIn, onLogout, name }: { open: boolean; onClose: () => void; isLoggedIn: boolean; onLogout: () => void; name: string }) {
+export default function MobileMenu({ open, onClose, isLoggedIn, onLogout }: { open: boolean; onClose: () => void; isLoggedIn: boolean; onLogout: () => void }) {
   if (!open) return null;
 
   return (
