@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { useState } from "react";
 import MobileMenu from "./MobileMenu";
-import { useAuth } from "@/context/AuthContext";
+// import { useAuth } from "@/context/AuthContext";
+import { useAuthStore } from "@/store/authStore";
 import loadLocalStorage from "@/api/helpers/loadLocalStorage";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
-  const { user, logout } = useAuth();
-
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.clearAuth);
   const name = loadLocalStorage("name");
 
   return (
