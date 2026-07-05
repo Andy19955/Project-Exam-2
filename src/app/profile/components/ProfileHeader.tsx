@@ -13,7 +13,7 @@ export default function ProfileHeader({ profile }: { profile: ProfileType }) {
     <section className="mx-auto max-w-7xl px-6 py-5 sm:py-10">
       <div className="rounded-4xl border border-(--border) bg-(--surface) shadow-lg">
         <div className="relative h-56 bg-linear-to-br from-(--primary) to(--secondary) rounded-t-4xl sm:h-72">
-          {bannerImage ? <Image src={bannerImage} alt={bannerAlt} fill priority className="object-cover rounded-t-4xl" /> : null}
+          {bannerImage ? <Image src={bannerImage} alt={bannerAlt} fill className="object-cover rounded-t-4xl" /> : null}
           <div className="absolute inset-x-0 bottom-0 h-32 bg-linear-to-b from-white/0 to-white/95" />
         </div>
         <div className="relative px-6 pb-8 sm:px-10 sm:pb-10">
