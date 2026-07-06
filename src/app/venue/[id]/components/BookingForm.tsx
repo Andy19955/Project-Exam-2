@@ -5,6 +5,7 @@ import { useAuthStore } from "@/store/authStore";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import LoginForm from "@/app/login/LoginForm";
+import { createBooking } from "@/api/bookings/createBooking";
 
 type DateValuePiece = Date | null;
 type DateValue = DateValuePiece | [DateValuePiece, DateValuePiece];
@@ -20,6 +21,10 @@ function startOfDay(date: Date) {
   const normalizedDate = new Date(date);
   normalizedDate.setHours(0, 0, 0, 0);
   return normalizedDate;
+}
+
+function toBookingDateString(date: Date) {
+  return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())).toISOString();
 }
 
 function isBookedDay(date: Date, bookings: Booking[]) {
@@ -61,11 +66,16 @@ function getNights(dateRange: DateValue) {
   return Math.max(0, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
 }
 
-export default function BookingForm({ maxGuests, price, bookings }: { maxGuests: number; price: number; bookings: Booking[] }) {
+export default function BookingForm({ maxGuests, price, bookings, venueId }: { maxGuests: number; price: number; bookings: Booking[]; venueId: string }) {
   const [dateRange, setDateRange] = useState<DateValue>(null);
   const [guestCount, setGuestCount] = useState(1);
   const [selectionError, setSelectionError] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [bookingSuccess, setBookingSuccess] = useState("");
+  const [bookingError, setBookingError] = useState("");
+  const [isBooking, setIsBooking] = useState(false);
+  const [localBookings, setLocalBookings] = useState(bookings);
+  const [calendarKey, setCalendarKey] = useState(0);
 
   const nights = getNights(dateRange);
   const checkIn = Array.isArray(dateRange) ? dateRange[0] : null;
@@ -75,7 +85,7 @@ export default function BookingForm({ maxGuests, price, bookings }: { maxGuests:
   const overlapsBookedRange = Boolean(
     hasCompleteRange &&
     Array.isArray(dateRange) &&
-    bookings.some((booking) => {
+    localBookings.some((booking) => {
       const rangeStart = startOfDay(checkIn as Date).getTime();
       const rangeEnd = startOfDay(checkOut as Date).getTime();
       const bookingStart = Math.max(startOfDay(parseBookingDate(booking.dateFrom)).getTime(), startOfDay(new Date()).getTime());
@@ -92,16 +102,7 @@ export default function BookingForm({ maxGuests, price, bookings }: { maxGuests:
 
   const isAuthenticated = useAuthStore((state) => state.user !== null);
 
-  const disableBookedDates = ({ date, view }: { date: Date; view: string }) => view === "month" && isBookedDay(date, bookings);
-
-  function handleBooking() {
-    console.log("Booking submitted:", {
-      checkIn,
-      checkOut,
-      guestCount,
-      total,
-    });
-  }
+  const disableBookedDates = ({ date, view }: { date: Date; view: string }) => view === "month" && isBookedDay(date, localBookings);
 
   const handleDateChange = (value: DateValue) => {
     if (!Array.isArray(value)) {
@@ -120,7 +121,7 @@ export default function BookingForm({ maxGuests, price, bookings }: { maxGuests:
 
     const rangeStart = startOfDay(nextCheckIn).getTime();
     const rangeEnd = startOfDay(nextCheckOut).getTime();
-    const rangeOverlapsBooking = bookings.some((booking) => {
+    const rangeOverlapsBooking = localBookings.some((booking) => {
       const bookingStart = Math.max(startOfDay(parseBookingDate(booking.dateFrom)).getTime(), startOfDay(new Date()).getTime());
       const bookingEnd = startOfDay(parseBookingDate(booking.dateTo)).getTime();
 
@@ -139,21 +140,59 @@ export default function BookingForm({ maxGuests, price, bookings }: { maxGuests:
     setSelectionError(false);
   };
 
+  async function handleBooking() {
+    if (!checkIn || !checkOut) {
+      return;
+    }
+
+    const bookingData = {
+      dateFrom: toBookingDateString(checkIn),
+      dateTo: toBookingDateString(checkOut),
+      guests: guestCount,
+      venueId: venueId,
+    };
+
+    return createBooking(bookingData);
+  }
+
   async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
+    setBookingSuccess("");
+    setBookingError("");
 
     if (!isAuthenticated) {
       setShowLoginModal(true);
       return;
     }
 
-    handleBooking();
+    if (!isValidStay) {
+      return;
+    }
+
+    setIsBooking(true);
+
+    try {
+      const result = await handleBooking();
+      if (result?.data) {
+        setLocalBookings((currentBookings) => [...currentBookings, result.data as Booking]);
+      }
+      setBookingSuccess("Booking confirmed. Your stay has been reserved.");
+      setDateRange(null);
+      setGuestCount(1);
+      setCalendarKey((currentKey) => currentKey + 1);
+    } catch (error) {
+      setBookingError(error instanceof Error ? error.message : "Booking failed");
+    } finally {
+      setIsBooking(false);
+    }
   }
 
   return (
     <>
       <form className="flex flex-col gap-4 px-4 py-6" onSubmit={handleSubmit}>
-        <Calendar onChange={handleDateChange} value={dateRange} selectRange={true} minDate={new Date()} tileDisabled={disableBookedDates} className="min-w-full rounded-lg" />
+        {bookingSuccess ? <p className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">{bookingSuccess}</p> : null}
+        {bookingError ? <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{bookingError}</p> : null}
+        <Calendar key={calendarKey} onChange={handleDateChange} value={dateRange} selectRange={true} minDate={new Date()} tileDisabled={disableBookedDates} className="min-w-full rounded-lg" />
         {selectionError ? <p className="text-sm font-medium text-amber-700">A booking must stay within an available date range. Choose dates that do not cross an occupied period.</p> : null}
         <div className="grid gap-3 rounded-3xl border border-(--border) bg-(--surface-dark) p-4 text-sm text-(--text-primary)">
           <div className="flex items-center justify-between gap-4">
@@ -193,10 +232,10 @@ export default function BookingForm({ maxGuests, price, bookings }: { maxGuests:
         </div>
         <button
           type="submit"
-          disabled={!isValidStay}
+          disabled={!isValidStay || isBooking}
           className="w-full rounded-2xl bg-(--background-dark) cursor-pointer p-4 text-sm font-semibold text-white transition hover:bg-(--background-dark-soft) disabled:cursor-not-allowed disabled:bg-(--background-dark-soft) disabled:opacity-60"
         >
-          {isAuthenticated ? "Book now" : "Log in to book"}
+          {isBooking ? "Booking..." : isAuthenticated ? "Book now" : "Log in to book"}
         </button>
       </form>
       {showLoginModal ? (

@@ -4,3 +4,4 @@ export const registerUrl = `${baseUrl}/auth/register`;
 export const signInUrl = `${baseUrl}/auth/login?_holidaze=true`;
 export const profileUrl = `${baseUrl}/holidaze/profiles`;
 export const venuesUrl = `${baseUrl}/holidaze/venues`;
+export const bookingsUrl = `${baseUrl}/holidaze/bookings`;
