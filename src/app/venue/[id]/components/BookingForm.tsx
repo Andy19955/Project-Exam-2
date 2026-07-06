@@ -1,8 +1,10 @@
 "use client";
 import { Booking } from "@/types/booking";
 import { useState } from "react";
+import { useAuthStore } from "@/store/authStore";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import LoginForm from "@/app/login/LoginForm";
 
 type DateValuePiece = Date | null;
 type DateValue = DateValuePiece | [DateValuePiece, DateValuePiece];
@@ -63,6 +65,7 @@ export default function BookingForm({ maxGuests, price, bookings }: { maxGuests:
   const [dateRange, setDateRange] = useState<DateValue>(null);
   const [guestCount, setGuestCount] = useState(1);
   const [selectionError, setSelectionError] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const nights = getNights(dateRange);
   const checkIn = Array.isArray(dateRange) ? dateRange[0] : null;
@@ -87,7 +90,18 @@ export default function BookingForm({ maxGuests, price, bookings }: { maxGuests:
   const isValidStay = nights >= 1 && !overlapsBookedRange;
   const total = isValidStay ? price * nights * guestCount : 0;
 
+  const isAuthenticated = useAuthStore((state) => state.user !== null);
+
   const disableBookedDates = ({ date, view }: { date: Date; view: string }) => view === "month" && isBookedDay(date, bookings);
+
+  function handleBooking() {
+    console.log("Booking submitted:", {
+      checkIn,
+      checkOut,
+      guestCount,
+      total,
+    });
+  }
 
   const handleDateChange = (value: DateValue) => {
     if (!Array.isArray(value)) {
@@ -125,61 +139,86 @@ export default function BookingForm({ maxGuests, price, bookings }: { maxGuests:
     setSelectionError(false);
   };
 
+  async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    handleBooking();
+  }
+
   return (
-    <form className="flex flex-col gap-4 px-4 py-6">
-      <Calendar onChange={handleDateChange} value={dateRange} selectRange={true} minDate={new Date()} tileDisabled={disableBookedDates} className="min-w-full rounded-lg" />
-      {selectionError ? <p className="text-sm font-medium text-amber-700">A booking must stay within an available date range. Choose dates that do not cross an occupied period.</p> : null}
-      <div className="grid gap-3 rounded-3xl border border-(--border) bg-(--surface-dark) p-4 text-sm text-(--text-primary)">
-        <div className="flex items-center justify-between gap-4">
-          <span className="font-medium text-(--text-secondary)">Check-in</span>
-          <span className="text-right font-semibold">{formatDate(checkIn)}</span>
+    <>
+      <form className="flex flex-col gap-4 px-4 py-6" onSubmit={handleSubmit}>
+        <Calendar onChange={handleDateChange} value={dateRange} selectRange={true} minDate={new Date()} tileDisabled={disableBookedDates} className="min-w-full rounded-lg" />
+        {selectionError ? <p className="text-sm font-medium text-amber-700">A booking must stay within an available date range. Choose dates that do not cross an occupied period.</p> : null}
+        <div className="grid gap-3 rounded-3xl border border-(--border) bg-(--surface-dark) p-4 text-sm text-(--text-primary)">
+          <div className="flex items-center justify-between gap-4">
+            <span className="font-medium text-(--text-secondary)">Check-in</span>
+            <span className="text-right font-semibold">{formatDate(checkIn)}</span>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <span className="font-medium text-(--text-secondary)">Check-out</span>
+            <span className="text-right font-semibold">{formatDate(checkOut)}</span>
+          </div>
         </div>
-        <div className="flex items-center justify-between gap-4">
-          <span className="font-medium text-(--text-secondary)">Check-out</span>
-          <span className="text-right font-semibold">{formatDate(checkOut)}</span>
-        </div>
-      </div>
-      <label className="flex flex-col gap-2 text-sm font-medium text-(--text-primary)">
-        <span>Guests</span>
-        <select
-          value={guestCount}
-          onChange={(event) => setGuestCount(Number(event.target.value))}
-          className="w-full rounded-2xl border border-(--border) bg-(--surface-dark) px-4 py-3 text-(--text-primary) outline-none transition focus:border-(--border-dark) focus:bg-white"
-        >
-          {Array.from({ length: maxGuests }, (_, index) => index + 1).map((guestCount) => (
-            <option key={guestCount} value={guestCount}>
+        <label className="flex flex-col gap-2 text-sm font-medium text-(--text-primary)">
+          <span>Guests</span>
+          <select
+            value={guestCount}
+            onChange={(event) => setGuestCount(Number(event.target.value))}
+            className="w-full rounded-2xl border border-(--border) bg-(--surface-dark) px-4 py-3 text-(--text-primary) outline-none transition focus:border-(--border-dark) focus:bg-white"
+          >
+            {Array.from({ length: maxGuests }, (_, index) => index + 1).map((guestCount) => (
+              <option key={guestCount} value={guestCount}>
+                {guestCount} guest{guestCount > 1 ? "s" : ""}
+              </option>
+            ))}
+          </select>
+        </label>
+        <div className="flex flex-col gap-3 rounded-3xl border border-(--border-dark) bg-(--background-dark) px-4 py-4 text-white shadow-sm">
+          <div className="flex items-center justify-between gap-4 text-sm text-(--text-light)">
+            <span>{isValidStay ? `${nights} night${nights > 1 ? "s" : ""}` : "Select two different dates"}</span>
+            <span>
               {guestCount} guest{guestCount > 1 ? "s" : ""}
-            </option>
-          ))}
-        </select>
-      </label>
-      <div className="flex flex-col gap-3 rounded-3xl border border-(--border-dark) bg-(--background-dark) px-4 py-4 text-white shadow-sm">
-        <div className="flex items-center justify-between gap-4 text-sm text-(--text-light)">
-          <span>{isValidStay ? `${nights} night${nights > 1 ? "s" : ""}` : "Select two different dates"}</span>
-          <span>
-            {guestCount} guest{guestCount > 1 ? "s" : ""}
-          </span>
+            </span>
+          </div>
+          <div className="flex items-end justify-between gap-4">
+            <span className="text-sm text-(--text-light)">Estimated total</span>
+            <span className="text-3xl font-semibold">{isValidStay ? `$${total.toLocaleString("en-US")}` : "--"}</span>
+          </div>
         </div>
-        <div className="flex items-end justify-between gap-4">
-          <span className="text-sm text-(--text-light)">Estimated total</span>
-          <span className="text-3xl font-semibold">{isValidStay ? `$${total.toLocaleString("en-US")}` : "--"}</span>
+        <button
+          type="submit"
+          disabled={!isValidStay}
+          className="w-full rounded-2xl bg-(--background-dark) cursor-pointer p-4 text-sm font-semibold text-white transition hover:bg-(--background-dark-soft) disabled:cursor-not-allowed disabled:bg-(--background-dark-soft) disabled:opacity-60"
+        >
+          {isAuthenticated ? "Book now" : "Log in to book"}
+        </button>
+      </form>
+      {showLoginModal ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 py-6 backdrop-blur-sm" onClick={() => setShowLoginModal(false)}>
+          <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl" onClick={(event) => event.stopPropagation()}>
+            <div className="mb-4 flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-semibold text-(--text-primary)">Log in to book</h2>
+                <p className="text-sm text-(--text-secondary)">Sign in to continue with your booking.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowLoginModal(false)}
+                className="rounded-full p-2 text-(--text-secondary) transition cursor-pointer hover:bg-black/5 hover:text-(--text-primary)"
+              >
+                <i className="fa-solid fa-xmark" />
+              </button>
+            </div>
+            <LoginForm source="booking" onSuccess={() => setShowLoginModal(false)} />
+          </div>
         </div>
-      </div>
-      <label className="flex flex-col gap-2 text-sm font-medium text-(--text-primary)">
-        <span>Special request</span>
-        <textarea
-          rows={4}
-          placeholder="Tell the owner about your arrival time or preferences"
-          className="w-full rounded-2xl border border-(--border) bg-(--surface-dark) px-4 py-3 text-(--text-primary) outline-none transition placeholder:text-(--text-muted) focus:border-(--border-dark) focus:bg-white"
-        />
-      </label>
-      <button
-        type="submit"
-        disabled={!isValidStay}
-        className="w-full rounded-2xl bg-(--background-dark) cursor-pointer p-4 text-sm font-semibold text-white transition hover:bg-(--background-dark-soft) disabled:cursor-not-allowed disabled:bg-(--background-dark-soft) disabled:opacity-60"
-      >
-        Book now
-      </button>
-    </form>
+      ) : null}
+    </>
   );
 }

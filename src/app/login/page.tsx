@@ -15,7 +15,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       <div className="flex flex-col gap-8 bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
         <h1 className="text-center font-bold text-xl">Login to your account</h1>
         {showRegistrationSuccess ? <div className="rounded-md bg-(--background-success) p-3 text-sm text-(--success)">Registration successful. You can log in now.</div> : null}
-        <LoginForm />
+        <LoginForm source="login" />
       </div>
     </div>
   );
