@@ -4,12 +4,13 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { userLogin } from "@/api/auth/userLogin";
 import { loginFormSchema, type LoginData } from "@/schemas/loginFormSchema";
+import { LoginFormProps } from "@/types/loginFormProps";
 import { useAuthStore } from "@/store/authStore";
 import { z } from "zod";
 
 type FieldErrors = Partial<Record<keyof LoginData, string>>;
 
-export default function LoginForm() {
+export default function LoginForm({ source, onSuccess }: LoginFormProps) {
   const router = useRouter();
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState("");
@@ -49,7 +50,10 @@ export default function LoginForm() {
         venueManager: response.data.venueManager,
       };
       useAuthStore.getState().setAuth(response.data.accessToken, userData);
-      router.push("/");
+      if (source === "login") {
+        router.push("/profile");
+      }
+      onSuccess?.();
     } catch (error) {
       setFormError(error instanceof Error ? error.message : "Login failed");
     } finally {
