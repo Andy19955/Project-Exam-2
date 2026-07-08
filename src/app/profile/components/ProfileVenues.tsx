@@ -10,7 +10,7 @@ export default function ProfileVenues({ venues }: { venues?: Venue[] }) {
   return (
     <>
       <section className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8 flex flex-col gap-4">
-        <div className="flex flex-wrap justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-4">
           <h2 className="text-2xl font-bold text-(--text-primary)">Your Venues</h2>
           <button
             className="flex items-center gap-2 w-fit cursor-pointer rounded-full border border-(--border) bg-(--surface) px-4 py-2 text-sm font-semibold text-(--text-primary) shadow-sm transition-colors hover:bg-(--surface-dark)/50"
