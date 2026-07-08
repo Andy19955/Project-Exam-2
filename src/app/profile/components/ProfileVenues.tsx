@@ -4,12 +4,9 @@ import { Venue } from "@/types/venue";
 import VenueCard from "@/components/venues/VenueCard";
 import { useState } from "react";
 import CreateNewVenueForm from "./CreateNewVenueForm";
-import { useAuthStore } from "@/store/authStore";
 
 export default function ProfileVenues({ venues }: { venues?: Venue[] }) {
   const [showCreateVenueModal, setShowCreateVenueModal] = useState(false);
-  const user = useAuthStore((state) => state.user);
-  const hydrated = useAuthStore((state) => state.hydrated);
 
   return (
     <>
@@ -27,7 +24,7 @@ export default function ProfileVenues({ venues }: { venues?: Venue[] }) {
         {venues?.length === 0 && <p className="text-(--text-secondary)">You have no venues.</p>}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
           {venues?.map((venue) => (
-            <VenueCard key={venue.id} venue={venue} isOwner={hydrated && user?.name === venue.owner?.name} />
+            <VenueCard key={venue.id} venue={venue} isOwner={true} />
           ))}
         </div>
       </section>
