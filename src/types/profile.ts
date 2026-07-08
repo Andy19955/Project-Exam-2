@@ -1,5 +1,6 @@
 import { Media } from "./media";
 import { Booking } from "./booking";
+import { Venue } from "./venue";
 
 export interface Profile {
   name: string;
@@ -9,4 +10,5 @@ export interface Profile {
   banner: Media;
   bookings?: Booking[];
   venueManager: boolean;
+  venues?: Venue[];
 }

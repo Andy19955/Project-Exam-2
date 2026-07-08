@@ -58,7 +58,6 @@ export default function BookingCard({ booking, onBookingCancelled }: { booking: 
                 View Venue
               </Link>
               <button
-                type="button"
                 onClick={() => setShowCancelModal(true)}
                 className="flex-1 text-nowrap cursor-pointer border border-(--error) hover:border-(--error-hover) text-(--error) hover:text-white mt-3 font-semibold border-solid text-center rounded-lg px-3 py-1 hover:bg-(--error-hover) transition-colors duration-200"
               >
