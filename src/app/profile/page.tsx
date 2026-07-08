@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/authStore";
 import UpcomingBookings from "./components/UpcomingBookings";
 import ProfileHeaderSkeleton from "./components/ProfileHeaderSkeleton";
 import UpcomingBookingsSkeleton from "./components/UpcomingBookingsSkeleton";
+import ProfileEditForm from "./components/ProfileEditForm";
 
 export default function Profile() {
   const user = useAuthStore((state) => state.user);
@@ -17,6 +18,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
   const userName = user?.name || "";
 
   const refreshProfile = async () => {
@@ -68,7 +70,8 @@ export default function Profile() {
   if (notFound || !profile) return <div>Profile not found</div>;
   return (
     <>
-      <ProfileHeader profile={profile} />
+      <ProfileHeader profile={profile} onEditProfile={() => setIsEditingProfile(true)} />
+      {isEditingProfile ? <ProfileEditForm profile={profile} onUpdate={setProfile} onCancel={() => setIsEditingProfile(false)} /> : null}
       <UpcomingBookings bookings={profile.bookings} onBookingCancelled={refreshProfile} />
     </>
   );

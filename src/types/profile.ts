@@ -8,4 +8,5 @@ export interface Profile {
   avatar: Media;
   banner: Media;
   bookings?: Booking[];
+  venueManager: boolean;
 }
