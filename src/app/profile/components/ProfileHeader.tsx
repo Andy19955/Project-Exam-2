@@ -1,8 +1,7 @@
 import { Profile as ProfileType } from "@/types/profile";
 import Image from "next/image";
-import Link from "next/link";
 
-export default function ProfileHeader({ profile }: { profile: ProfileType }) {
+export default function ProfileHeader({ profile, onEditProfile }: { profile: ProfileType; onEditProfile: () => void }) {
   const avatarImage = profile?.avatar?.url;
   const bannerImage = profile?.banner?.url;
   const bannerAlt = profile?.banner?.alt || `${profile.name}'s banner`;
@@ -37,13 +36,14 @@ export default function ProfileHeader({ profile }: { profile: ProfileType }) {
                 <p className="max-w-2xl text-base leading-7 text-(--text-secondary) sm:text-lg">{profile.bio}</p>
               </div>
             </div>
-            <Link
-              href={`/profile/edit`}
-              className="flex items-center justify-center gap-2 rounded-full border border-(--border) bg-(--background-soft) px-4 py-2 text-sm font-semibold text-(--text-primary) shadow-sm transition-colors hover:bg-(--background-soft)/50"
+            <button
+              type="button"
+              onClick={onEditProfile}
+              className="flex cursor-pointer items-center justify-center gap-2 rounded-full border border-(--border) bg-(--background-soft) px-4 py-2 text-sm font-semibold text-(--text-primary) shadow-sm transition-colors hover:bg-(--background-soft)/50"
             >
               <i className="fa-solid fa-pen-to-square" />
               Edit Profile
-            </Link>
+            </button>
           </div>
         </div>
       </div>
