@@ -66,7 +66,7 @@ function getNights(dateRange: DateValue) {
   return Math.max(0, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
 }
 
-export default function BookingForm({ maxGuests, price, bookings, venueId }: { maxGuests: number; price: number; bookings: Booking[]; venueId: string }) {
+export default function BookingForm({ maxGuests, price, bookings, venueId }: { maxGuests: number; price: number; bookings?: Booking[]; venueId: string }) {
   const [dateRange, setDateRange] = useState<DateValue>(null);
   const [guestCount, setGuestCount] = useState(1);
   const [selectionError, setSelectionError] = useState(false);
@@ -74,7 +74,7 @@ export default function BookingForm({ maxGuests, price, bookings, venueId }: { m
   const [bookingSuccess, setBookingSuccess] = useState("");
   const [bookingError, setBookingError] = useState("");
   const [isBooking, setIsBooking] = useState(false);
-  const [localBookings, setLocalBookings] = useState(bookings);
+  const [localBookings, setLocalBookings] = useState<Booking[]>(bookings ?? []);
   const [calendarKey, setCalendarKey] = useState(0);
 
   const nights = getNights(dateRange);
