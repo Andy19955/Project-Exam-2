@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { amenities } from "@/constants/amenities";
 
-export default function VenueCard({ venue }: { venue: Venue }) {
+export default function VenueCard({ venue, isOwner }: { venue: Venue; isOwner: boolean }) {
   const locationText = venue.location.city && venue.location.country ? `${venue.location.city}, ${venue.location.country}` : venue.location.city || venue.location.country || "Location not available";
 
   return (
@@ -29,12 +29,21 @@ export default function VenueCard({ venue }: { venue: Venue }) {
               )}
             </div>
           </div>
-          <Link
-            href={`/venue/${venue.id}`}
-            className="border border-(--secondary) hover:border-(--secondary-hover) text-(--secondary) hover:text-white mt-3 font-semibold border-solid text-center rounded-lg px-3 py-1 hover:bg-(--secondary-hover) transition-colors duration-200"
-          >
-            Book Now
-          </Link>
+          {isOwner ? (
+            <Link
+              href={`/profile/venues/${venue.id}/edit`}
+              className="border border-(--secondary) hover:border-(--secondary-hover) text-(--secondary) hover:text-white mt-3 font-semibold border-solid text-center rounded-lg px-3 py-1 hover:bg-(--secondary-hover) transition-colors duration-200"
+            >
+              Edit Venue
+            </Link>
+          ) : (
+            <Link
+              href={`/venue/${venue.id}`}
+              className="border border-(--secondary) hover:border-(--secondary-hover) text-(--secondary) hover:text-white mt-3 font-semibold border-solid text-center rounded-lg px-3 py-1 hover:bg-(--secondary-hover) transition-colors duration-200"
+            >
+              Book Now
+            </Link>
+          )}
         </div>
       </div>
     </article>
