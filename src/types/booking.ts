@@ -1,5 +1,5 @@
 import { Profile } from "@/types/profile";
-import { Media } from "@/types/media";
+import { Venue } from "./venue";
 
 export interface Booking {
   id: string;
@@ -8,6 +8,6 @@ export interface Booking {
   guests: number;
   created: string;
   updated: string;
-  customer: Profile;
-  banner: Media[];
+  customer?: Profile;
+  venue?: Venue;
 }

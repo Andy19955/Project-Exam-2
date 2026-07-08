@@ -6,6 +6,8 @@ import { fetchProfile } from "@/api/profiles/fetchProfile";
 import ProfileHeader from "./components/ProfileHeader";
 import { useAuthStore } from "@/store/authStore";
 import UpcomingBookings from "./components/UpcomingBookings";
+import ProfileHeaderSkeleton from "./components/ProfileHeaderSkeleton";
+import UpcomingBookingsSkeleton from "./components/UpcomingBookingsSkeleton";
 
 export default function Profile() {
   const user = useAuthStore((state) => state.user);
@@ -15,12 +17,30 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const userName = user?.name || "";
+
+  const refreshProfile = async () => {
+    try {
+      const result = await fetchProfile(userName);
+      if (!result?.data) {
+        setNotFound(true);
+        return;
+      }
+
+      setProfile(result.data);
+    } catch (error) {
+      setError(error as Error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (!hydrated || !user?.name) return;
+    if (!hydrated || !userName) return;
+
     const fetchProfileData = async () => {
       try {
-        const result = await fetchProfile(user?.name || "");
+        const result = await fetchProfile(userName);
         if (!result?.data) {
           setNotFound(true);
           return;
@@ -35,16 +55,21 @@ export default function Profile() {
     };
 
     fetchProfileData();
-  }, [hydrated, user?.name]);
+  }, [hydrated, userName]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <>
+        <ProfileHeaderSkeleton />
+        <UpcomingBookingsSkeleton />
+      </>
+    );
   if (error) return <div>Error: {error.message}</div>;
   if (notFound || !profile) return <div>Profile not found</div>;
-
   return (
     <>
       <ProfileHeader profile={profile} />
-      <UpcomingBookings />
+      <UpcomingBookings bookings={profile.bookings} onBookingCancelled={refreshProfile} />
     </>
   );
 }

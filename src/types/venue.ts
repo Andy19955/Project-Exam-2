@@ -27,6 +27,6 @@ export interface Venue {
     lat: number;
     long: number;
   };
-  owner: Profile;
-  bookings: Booking[];
+  owner?: Profile;
+  bookings?: Booking[];
 }

@@ -1,4 +1,5 @@
-import { Media } from "@/types/media";
+import { Media } from "./media";
+import { Booking } from "./booking";
 
 export interface Profile {
   name: string;
@@ -6,4 +7,5 @@ export interface Profile {
   bio: string;
   avatar: Media;
   banner: Media;
+  bookings?: Booking[];
 }
