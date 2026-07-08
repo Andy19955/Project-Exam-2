@@ -3,26 +3,24 @@
 import { useEffect, useState } from "react";
 import { Venue } from "@/types/venue";
 import { amenities } from "@/constants/amenities";
-import Image from "next/image";
+import Link from "next/link";
 import BookingForm from "@/app/venue/[id]/components/BookingForm";
+import { fetchVenue } from "@/api/venues/fetchVenue";
+import { useAuthStore } from "@/store/authStore";
+import MediaImage from "../../../../components/MediaImage";
 
 export default function VenueDetails({ id }: { id: string }) {
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const user = useAuthStore((state) => state.user);
+  const hydrated = useAuthStore((state) => state.hydrated);
 
   useEffect(() => {
     const fetchSingleVenue = async () => {
       try {
-        const response = await fetch(`https://v2.api.noroff.dev/holidaze/venues/${id}?_owner=true&_bookings=true`);
-        const result = await response.json();
-        if (!response.ok || result?.errors || !result?.data) {
-          setNotFound(true);
-          setVenue(null);
-          return;
-        }
-
+        const result = await fetchVenue(id);
         setVenue(result.data);
       } catch (error) {
         setNotFound(true);
@@ -40,6 +38,7 @@ export default function VenueDetails({ id }: { id: string }) {
   if (notFound || !venue) return <div>Venue not found</div>;
 
   const locationText = venue.location.city && venue.location.country ? `${venue.location.city}, ${venue.location.country}` : venue.location.city || venue.location.country || "Location not available";
+  const isOwner = hydrated && user?.name === venue.owner?.name;
 
   return (
     <div className="flex flex-col gap-6 w-full">
@@ -52,14 +51,22 @@ export default function VenueDetails({ id }: { id: string }) {
           <span>Up to {venue.maxGuests} guests</span>
         </div>
         <div className="flex flex-col gap-3">
-          <h1 className="text-4xl font-semibold tracking-tight text-(--text-primary) sm:text-5xl">{venue.name}</h1>
+          <h1 className="text-4xl font-semibold text-(--text-primary) sm:text-5xl">{venue.name}</h1>
+          {isOwner ? (
+            <Link
+              href={`/venue/${venue.id}/manage`}
+              className="flex w-fit items-center justify-center rounded-full border border-(--secondary) px-4 py-2 text-sm font-semibold text-(--secondary) transition hover:bg-(--secondary) hover:text-white"
+            >
+              Manage venue
+            </Link>
+          ) : null}
         </div>
       </div>
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="flex flex-col gap-6 w-full">
           <section className="rounded-4xl border border-(--border) bg-white shadow-lg">
             <div className="relative aspect-16/10 w-full rounded-4xl">
-              <Image src={venue.media?.[0]?.url ?? "/placeholder.jpg"} alt={venue.media?.[0]?.alt ?? "Venue image"} fill className="object-cover rounded-4xl" />
+              <MediaImage src={venue.media?.[0]?.url ?? "/images/venue-placeholder.svg"} alt={venue.media?.[0]?.alt ?? "Venue image"} fill className="object-cover rounded-4xl" />
               <div className="absolute bottom-5 left-5 flex flex-wrap gap-2">
                 <span className="rounded-full bg-white/90 px-3 py-1 text-sm font-medium text-(--text-primary) shadow-sm">From ${venue.price} / night</span>
                 <span className="rounded-full bg-(--background-dark)/70 px-3 py-1 text-sm font-medium text-white backdrop-blur-sm">{venue.rating} rating</span>
@@ -109,13 +116,7 @@ export default function VenueDetails({ id }: { id: string }) {
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-5 rounded-3xl bg-linear-to-br from-(--background-dark) to-(--background-dark-soft) p-5 text-white shadow-lg sm:items-center">
-              <Image
-                src={venue.owner?.avatar?.url ?? "/placeholder.jpg"}
-                alt={venue.owner?.name ?? "Host avatar"}
-                width={96}
-                height={96}
-                className="h-24 w-24 rounded-3xl object-cover ring-4 ring-white/10"
-              />
+              <MediaImage src={venue.owner?.avatar?.url} alt={venue.owner?.name ?? "Host avatar"} width={96} height={96} className="h-24 w-24 rounded-3xl object-cover ring-4 ring-white/10" />
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-0.5">
                   <h3 className="text-xl font-semibold">{venue.owner?.name}</h3>

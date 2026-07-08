@@ -9,7 +9,6 @@ import UpcomingBookings from "./components/UpcomingBookings";
 import ProfileHeaderSkeleton from "./components/ProfileHeaderSkeleton";
 import UpcomingBookingsSkeleton from "./components/UpcomingBookingsSkeleton";
 import ProfileEditForm from "./components/ProfileEditForm";
-import ProfileVenuesSkeleton from "./components/ProfileVenuesSkeleton";
 import ProfileVenues from "./components/ProfileVenues";
 
 export default function Profile() {

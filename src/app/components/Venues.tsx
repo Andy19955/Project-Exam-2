@@ -1,4 +1,4 @@
-import FetchVenues from "@/components/venues/FetchVenues";
+import DisplayVenues from "@/components/venues/DisplayVenues";
 
 export default function Venues() {
   return (
@@ -6,7 +6,7 @@ export default function Venues() {
       <div className="flex items-center justify-between my-5">
         <h2 className="text-2xl font-bold">Venues</h2>
       </div>
-      <FetchVenues limit={20} enableLoadMore={true} />
+      <DisplayVenues limit={20} enableLoadMore={true} />
     </section>
   );
 }

@@ -6,6 +6,7 @@ import { z } from "zod";
 import { createVenue } from "@/api/venues/createVenue";
 import { VenueData } from "@/types/venueData";
 import { useRouter } from "next/navigation";
+import { amenities } from "@/constants/amenities";
 
 type FieldErrors = Partial<Record<keyof CreateVenueData, string>>;
 
@@ -208,38 +209,16 @@ export default function NewVenueForm({ onCancel }: { onCancel: () => void }) {
       </div>
       <div className="flex flex-col gap-2">
         <h3 className="text-xl font-bold text-(--text-primary)">Amenities</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <input type="checkbox" id="wifi" name="wifi" className="w-4 h-4" checked={formData.wifi} onChange={(event) => setFormData({ ...formData, wifi: event.target.checked })} />
-            <label htmlFor="wifi" className="font-semibold">
-              {formData.wifi ? "WiFi available" : "No WiFi"}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {(Object.keys(amenities) as Array<keyof typeof amenities>).map((key) => (
+            <label key={key} className="flex items-center gap-3 rounded-2xl border border-(--border) bg-(--surface-dark) px-4 py-3 text-sm font-medium text-(--text-primary)">
+              <input type="checkbox" checked={Boolean(formData[key])} onChange={(event) => setFormData({ ...formData, [key]: event.target.checked })} className="h-4 w-4" />
+              <span>
+                <i className={`${amenities[key].icon} mr-2`} />
+                {amenities[key].label}
+              </span>
             </label>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <input type="checkbox" id="parking" name="parking" className="w-4 h-4" checked={formData.parking} onChange={(event) => setFormData({ ...formData, parking: event.target.checked })} />
-            <label htmlFor="parking" className="font-semibold">
-              {formData.parking ? "Parking available" : "No parking"}
-            </label>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <input
-              type="checkbox"
-              id="breakfast"
-              name="breakfast"
-              className="w-4 h-4"
-              checked={formData.breakfast}
-              onChange={(event) => setFormData({ ...formData, breakfast: event.target.checked })}
-            />
-            <label htmlFor="breakfast" className="font-semibold">
-              {formData.breakfast ? "Breakfast included" : "No breakfast"}
-            </label>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <input type="checkbox" id="pets" name="pets" className="w-4 h-4" checked={formData.pets} onChange={(event) => setFormData({ ...formData, pets: event.target.checked })} />
-            <label htmlFor="pets" className="font-semibold">
-              {formData.pets ? "Pets allowed" : "No pets"}
-            </label>
-          </div>
+          ))}
         </div>
       </div>
       <div className="flex flex-col gap-2">

@@ -5,22 +5,23 @@ import { Venue } from "@/types/venue";
 import { FetchVenuesProps } from "@/types/fetchVenuesProps";
 import VenueCard from "@/components/venues/VenueCard";
 import CardSkeleton from "@/components/CardSkeleton";
-import { venuesUrl } from "@/constants/apiUrls";
+import { fetchVenues } from "@/api/venues/fetchVenues";
+import { useAuthStore } from "@/store/authStore";
 
-export default function FetchVenues({ showGrid = true, limit, enableLoadMore = false }: FetchVenuesProps) {
+export default function DisplayVenues({ showGrid = true, limit, enableLoadMore = false }: FetchVenuesProps) {
   const [venues, setVenues] = useState<Venue[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const initialVisibleCount = typeof limit === "number" ? limit : 20;
   const [visibleCount, setVisibleCount] = useState(initialVisibleCount);
+  const user = useAuthStore((state) => state.user);
+  const hydrated = useAuthStore((state) => state.hydrated);
 
   useEffect(() => {
-    const fetchVenues = async () => {
+    const fetchVenuesData = async () => {
       try {
-        const response = await fetch(`${venuesUrl}?sort=created&sortOrder=desc`);
-        const data = await response.json();
-
-        setVenues(data.data);
+        const result = await fetchVenues();
+        setVenues(result.data);
       } catch (error) {
         setError(error as Error);
       } finally {
@@ -28,7 +29,7 @@ export default function FetchVenues({ showGrid = true, limit, enableLoadMore = f
       }
     };
 
-    fetchVenues();
+    fetchVenuesData();
   }, []);
 
   if (error) return <div>Error: {error.message}</div>;
@@ -49,7 +50,7 @@ export default function FetchVenues({ showGrid = true, limit, enableLoadMore = f
           <div className="flex flex-col gap-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
               {visibleVenues.map((venue) => (
-                <VenueCard key={venue.id} venue={venue} />
+                <VenueCard key={venue.id} venue={venue} isOwner={hydrated && user?.name === venue.owner?.name} />
               ))}
             </div>
             {canLoadMore ? (
