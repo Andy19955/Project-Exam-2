@@ -1,10 +1,10 @@
 "use client";
 
 import { Booking } from "@/types/booking";
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { cancelBooking } from "@/api/bookings/cancelBooking";
+import MediaImage from "../../../components/MediaImage";
 
 export default function BookingCard({ booking, onBookingCancelled }: { booking: Booking; onBookingCancelled?: () => Promise<void> | void }) {
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -27,12 +27,12 @@ export default function BookingCard({ booking, onBookingCancelled }: { booking: 
   return (
     <>
       <article className="flex flex-col shadow-md rounded-lg border border-(--border) bg-(--surface)">
-        <Image
-          src={booking.venue?.media?.[0]?.url || "/placeholder.jpg"}
+        <MediaImage
+          src={booking.venue?.media?.[0]?.url || "/images/venue-placeholder.svg"}
           alt={booking.venue?.media?.[0]?.alt || booking.venue?.name || "Venue image"}
           width={340}
           height={160}
-          className="object-cover rounded-t-lg w-full min-h-40"
+          className="object-cover rounded-t-lg min-h-40 w-85 h-40"
         />
         <div className="flex flex-col justify-between h-full p-4">
           <h3 className="text-lg font-bold mb-1">{booking.venue?.name}</h3>

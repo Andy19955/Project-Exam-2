@@ -1,14 +1,20 @@
 import { Venue } from "@/types/venue";
-import Image from "next/image";
 import Link from "next/link";
 import { amenities } from "@/constants/amenities";
+import MediaImage from "@/components/MediaImage";
 
 export default function VenueCard({ venue, isOwner }: { venue: Venue; isOwner: boolean }) {
   const locationText = venue.location.city && venue.location.country ? `${venue.location.city}, ${venue.location.country}` : venue.location.city || venue.location.country || "Location not available";
 
   return (
     <article className="flex flex-col shadow-md rounded-lg border border-(--border) bg-(--surface)">
-      <Image src={venue.media?.[0]?.url || "/placeholder.jpg"} alt={venue.media?.[0]?.alt || venue.name} width={340} height={160} className="object-cover rounded-t-lg min-h-40 w-85 h-40 " />
+      <MediaImage
+        src={venue.media?.[0]?.url || "/images/venue-placeholder.svg"}
+        alt={venue.media?.[0]?.alt || venue.name}
+        width={340}
+        height={160}
+        className="object-cover rounded-t-lg min-h-40 w-85 h-40"
+      />
       <div className="flex flex-col justify-between h-full p-4">
         <h3 className="text-lg font-bold mb-1">{venue.name}</h3>
         <div className="flex flex-col gap-1">
@@ -30,12 +36,20 @@ export default function VenueCard({ venue, isOwner }: { venue: Venue; isOwner: b
             </div>
           </div>
           {isOwner ? (
-            <Link
-              href={`/profile/venues/${venue.id}/edit`}
-              className="border border-(--secondary) hover:border-(--secondary-hover) text-(--secondary) hover:text-white mt-3 font-semibold border-solid text-center rounded-lg px-3 py-1 hover:bg-(--secondary-hover) transition-colors duration-200"
-            >
-              Edit Venue
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-1 mt-2">
+              <Link
+                href={`/venue/${venue.id}`}
+                className="flex-1 flex items-center justify-center border border-(--primary) hover:border-(--primary-hover) text-(--primary) hover:text-white mt-3 font-semibold border-solid text-center rounded-lg px-3 py-1 hover:bg-(--primary-hover) transition-colors duration-200"
+              >
+                View Venue
+              </Link>
+              <Link
+                href={`/venue/${venue.id}/manage`}
+                className="flex-1 flex items-center justify-center border border-(--secondary) hover:border-(--secondary-hover) text-(--secondary) hover:text-white mt-3 font-semibold border-solid text-center rounded-lg px-3 py-1 hover:bg-(--secondary-hover) transition-colors duration-200"
+              >
+                Manage Venue
+              </Link>
+            </div>
           ) : (
             <Link
               href={`/venue/${venue.id}`}
