@@ -60,7 +60,6 @@ export default function Profile() {
 
     fetchProfileData();
   }, [hydrated, userName]);
-  console.log(profile);
   if (loading)
     return (
       <>
