@@ -9,6 +9,8 @@ import UpcomingBookings from "./components/UpcomingBookings";
 import ProfileHeaderSkeleton from "./components/ProfileHeaderSkeleton";
 import UpcomingBookingsSkeleton from "./components/UpcomingBookingsSkeleton";
 import ProfileEditForm from "./components/ProfileEditForm";
+import ProfileVenuesSkeleton from "./components/ProfileVenuesSkeleton";
+import ProfileVenues from "./components/ProfileVenues";
 
 export default function Profile() {
   const user = useAuthStore((state) => state.user);
@@ -58,7 +60,7 @@ export default function Profile() {
 
     fetchProfileData();
   }, [hydrated, userName]);
-
+  console.log(profile);
   if (loading)
     return (
       <>
@@ -73,6 +75,7 @@ export default function Profile() {
       <ProfileHeader profile={profile} onEditProfile={() => setIsEditingProfile(true)} />
       {isEditingProfile ? <ProfileEditForm profile={profile} onUpdate={setProfile} onCancel={() => setIsEditingProfile(false)} /> : null}
       <UpcomingBookings bookings={profile.bookings} onBookingCancelled={refreshProfile} />
+      {profile.venueManager ? <ProfileVenues venues={profile.venues} /> : null}
     </>
   );
 }
