@@ -8,7 +8,7 @@ export default function VenueCard({ venue }: { venue: Venue }) {
 
   return (
     <article className="flex flex-col shadow-md rounded-lg border border-(--border) bg-(--surface)">
-      <Image src={venue.media?.[0]?.url || "/placeholder.jpg"} alt={venue.media?.[0]?.alt || venue.name} width={340} height={160} className="object-cover rounded-t-lg w-full min-h-40" />
+      <Image src={venue.media?.[0]?.url || "/placeholder.jpg"} alt={venue.media?.[0]?.alt || venue.name} width={340} height={160} className="object-cover rounded-t-lg min-h-40 w-85 h-40 " />
       <div className="flex flex-col justify-between h-full p-4">
         <h3 className="text-lg font-bold mb-1">{venue.name}</h3>
         <div className="flex flex-col gap-1">

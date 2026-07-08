@@ -17,7 +17,7 @@ export default function FetchVenues({ showGrid = true, limit, enableLoadMore = f
   useEffect(() => {
     const fetchVenues = async () => {
       try {
-        const response = await fetch(venuesUrl);
+        const response = await fetch(`${venuesUrl}?sort=created&sortOrder=desc`);
         const data = await response.json();
 
         setVenues(data.data);
