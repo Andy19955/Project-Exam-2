@@ -2,12 +2,17 @@ import { Venue } from "@/types/venue";
 import Link from "next/link";
 import { amenities } from "@/constants/amenities";
 import MediaImage from "@/components/MediaImage";
+import { useRouter } from "next/navigation";
 
 export default function VenueCard({ venue, isOwner }: { venue: Venue; isOwner: boolean }) {
+  const router = useRouter();
   const locationText = venue.location.city && venue.location.country ? `${venue.location.city}, ${venue.location.country}` : venue.location.city || venue.location.country || "Location not available";
 
   return (
-    <article className="flex flex-col shadow-md rounded-lg border border-(--border) bg-(--surface)">
+    <article
+      className="flex flex-col shadow-md rounded-lg border border-(--border) bg-(--surface) hover:cursor-pointer hover:scale-105 transition-all"
+      onClick={() => router.push(`/venue/${venue.id}`)}
+    >
       <MediaImage
         src={venue.media?.[0]?.url || "/images/venue-placeholder.svg"}
         alt={venue.media?.[0]?.alt || venue.name}
@@ -55,7 +60,7 @@ export default function VenueCard({ venue, isOwner }: { venue: Venue; isOwner: b
               href={`/venue/${venue.id}`}
               className="border border-(--secondary) hover:border-(--secondary-hover) text-(--secondary) hover:text-white mt-3 font-semibold border-solid text-center rounded-lg px-3 py-1 hover:bg-(--secondary-hover) transition-colors duration-200"
             >
-              Book Now
+              View details
             </Link>
           )}
         </div>
