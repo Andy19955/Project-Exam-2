@@ -9,10 +9,14 @@ export default function SearchForm({ query = "", sort = "created", sortOrder = "
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
+    const queryValue = String(formData.get("query") ?? "").trim();
+    const sortValue = String(formData.get("sort") ?? "created");
+    const sortOrderValue = formData.get("sortOrder") === "asc" ? "asc" : "desc";
+
     onSearch({
-      query: String(formData.get("q") ?? ""),
-      sort: String(formData.get("sort") ?? "created"),
-      sortOrder: formData.get("sortOrder") === "asc" ? "asc" : "desc",
+      query: queryValue,
+      sort: sortValue,
+      sortOrder: sortOrderValue,
     });
   }
 
@@ -23,7 +27,7 @@ export default function SearchForm({ query = "", sort = "created", sortOrder = "
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-(--text-muted)">Search</span>
           <input
             type="search"
-            name="q"
+            name="query"
             defaultValue={query}
             placeholder="Search by venue, city, country or description"
             className="rounded-2xl border border-(--border) bg-(--surface) px-4 py-3 text-sm text-(--text-primary) outline-none transition focus:border-(--primary)"
