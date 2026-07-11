@@ -1,41 +1,64 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Venue } from "@/types/venue";
 import { FetchVenuesProps } from "@/types/fetchVenuesProps";
 import VenueCard from "@/components/venues/VenueCard";
 import CardSkeleton from "@/components/CardSkeleton";
-import { fetchVenues } from "@/api/venues/fetchVenues";
 import { useAuthStore } from "@/store/authStore";
 
-export default function DisplayVenues({ showGrid = true, limit, enableLoadMore = false }: FetchVenuesProps) {
-  const [venues, setVenues] = useState<Venue[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+function compareVenueValues(a: Venue, b: Venue, sort: string, sortOrder: "asc" | "desc") {
+  const multiplier = sortOrder === "asc" ? 1 : -1;
+
+  if (sort === "name") {
+    return a.name.localeCompare(b.name, undefined, { sensitivity: "base" }) * multiplier;
+  }
+
+  if (sort === "created" || sort === "updated") {
+    return (new Date(a[sort]).getTime() - new Date(b[sort]).getTime()) * multiplier;
+  }
+
+  if (sort === "price" || sort === "rating" || sort === "maxGuests") {
+    return (a[sort] - b[sort]) * multiplier;
+  }
+
+  if (sort === "meta.wifi" || sort === "meta.parking" || sort === "meta.breakfast" || sort === "meta.pets") {
+    const metaKey = sort.split(".")[1] as keyof Venue["meta"];
+    const availabilityDifference = Number(a.meta[metaKey]) - Number(b.meta[metaKey]);
+
+    return availabilityDifference !== 0 ? availabilityDifference * multiplier : a.name.localeCompare(b.name, undefined, { sensitivity: "base" }) * multiplier;
+  }
+
+  return (new Date(a.created).getTime() - new Date(b.created).getTime()) * multiplier;
+}
+
+export default function DisplayVenues({
+  showGrid = true,
+  limit,
+  enableLoadMore = false,
+  query = "",
+  sort = "created",
+  sortOrder = "desc",
+  venues = [],
+  loading = false,
+  error = null,
+}: FetchVenuesProps) {
   const initialVisibleCount = typeof limit === "number" ? limit : 20;
   const [visibleCount, setVisibleCount] = useState(initialVisibleCount);
   const user = useAuthStore((state) => state.user);
   const hydrated = useAuthStore((state) => state.hydrated);
 
-  useEffect(() => {
-    const fetchVenuesData = async () => {
-      try {
-        const result = await fetchVenues();
-        setVenues(result.data);
-      } catch (error) {
-        setError(error as Error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchVenuesData();
-  }, []);
-
   if (error) return <div>Error: {error.message}</div>;
 
-  const visibleVenues = venues.slice(0, visibleCount);
-  const canLoadMore = enableLoadMore && visibleCount < venues.length;
+  const normalizedQuery = query.trim().toLowerCase();
+  const searchedVenues = normalizedQuery
+    ? venues.filter((venue) => {
+        return [venue.name, venue.description, venue.location.city, venue.location.country, venue.location.continent].some((value) => value?.toLowerCase().includes(normalizedQuery));
+      })
+    : venues;
+  const sortedVenues = [...searchedVenues].sort((a, b) => compareVenueValues(a, b, sort, sortOrder));
+  const visibleVenues = sortedVenues.slice(0, visibleCount);
+  const canLoadMore = enableLoadMore && visibleCount < sortedVenues.length;
 
   return (
     <>
