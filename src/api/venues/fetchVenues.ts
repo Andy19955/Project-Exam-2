@@ -1,7 +1,20 @@
 import { venuesUrl } from "@/constants/apiUrls";
+import { SearchState } from "@/types/searchState";
 
-export async function fetchVenues() {
-  const response = await fetch(`${venuesUrl}?_owner=true&sort=created&sortOrder=desc`, {
+export async function fetchVenues({ query = "", sort = "created", sortOrder = "desc" }: SearchState = {}) {
+  const trimmedQuery = query.trim();
+  const baseUrl = trimmedQuery ? `${venuesUrl}/search` : venuesUrl;
+  const url = new URL(baseUrl);
+
+  url.searchParams.set("_owner", "true");
+  url.searchParams.set("sort", sort);
+  url.searchParams.set("sortOrder", sortOrder);
+
+  if (trimmedQuery) {
+    url.searchParams.set("q", trimmedQuery);
+  }
+
+  const response = await fetch(url.toString(), {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

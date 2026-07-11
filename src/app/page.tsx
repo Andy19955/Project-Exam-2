@@ -1,11 +1,5 @@
-import Hero from "@/app/components/Hero";
-import Venues from "@/app/components/Venues";
+import VenueBrowser from "@/app/components/VenueBrowser";
 
 export default function Home() {
-  return (
-    <>
-      <Hero />
-      <Venues />
-    </>
-  );
+  return <VenueBrowser />;
 }
