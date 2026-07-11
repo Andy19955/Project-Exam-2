@@ -10,7 +10,7 @@ import { SearchState } from "@/types/searchState";
 const defaultSearchState: SearchState = {
   query: "",
   sort: "created",
-  sortOrder: "asc",
+  sortOrder: "desc",
 };
 
 export default function VenueBrowser() {

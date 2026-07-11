@@ -4,7 +4,7 @@ import type { SubmitEvent } from "react";
 import { SearchFormProps } from "@/types/searchFormProps";
 import { sortOptions } from "@/constants/sortOptions";
 
-export default function SearchForm({ query = "", sort = "created", sortOrder = "asc", onSearch, onReset }: SearchFormProps) {
+export default function SearchForm({ query = "", sort = "created", sortOrder = "desc", onSearch, onReset }: SearchFormProps) {
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
