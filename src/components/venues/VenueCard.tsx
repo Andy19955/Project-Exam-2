@@ -41,7 +41,7 @@ export default function VenueCard({ venue, isOwner }: { venue: Venue; isOwner: b
             </div>
           </div>
           {isOwner ? (
-            <div className="flex flex-col sm:flex-row gap-1 mt-2">
+            <div className="flex flex-col sm:flex-row gap-1 mt-2" onClick={(e) => e.stopPropagation()}>
               <Link
                 href={`/venue/${venue.id}`}
                 className="flex-1 flex items-center justify-center border border-(--primary) hover:border-(--primary-hover) text-(--primary) hover:text-white mt-3 font-semibold border-solid text-center rounded-lg px-3 py-1 hover:bg-(--primary-hover) transition-colors duration-200"
