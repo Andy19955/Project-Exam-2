@@ -27,6 +27,5 @@ export async function createVenue(venueData: VenueData) {
   if (!response.ok) {
     throw new Error(result.errors?.[0]?.message ?? result.message ?? "Creating venue failed");
   }
-  console.log(result);
   return result;
 }
