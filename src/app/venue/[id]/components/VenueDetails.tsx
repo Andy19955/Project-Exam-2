@@ -127,7 +127,7 @@ export default function VenueDetails({ id }: { id: string }) {
             </div>
           </section>
         </div>
-        <aside className="lg:sticky lg:top-8 lg:self-start">
+        <aside className="lg:sticky lg:top-8 lg:self-start lg:max-w-95.5">
           <div className="rounded-4xl bg-white shadow-lg">
             <div className="flex flex-col gap-3 bg-(--background-dark) px-6 py-6 text-white rounded-t-4xl">
               <p className="text-sm font-medium uppercase tracking-[0.2em] text-(--text-light)">Booking</p>
