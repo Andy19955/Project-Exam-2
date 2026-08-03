@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import MobileMenu from "./MobileMenu";
 import { useAuthStore } from "@/store/authStore";
@@ -14,7 +15,8 @@ export default function Header() {
     <header className="w-full flex items-center justify-between px-6 py-4 bg-white border-b border-(--border) shadow-md min-h-20">
       <MobileMenu open={open} onClose={() => setOpen(false)} isLoggedIn={Boolean(user)} onLogout={logout} />
       <div className="flex items-center justify-between max-w-7xl w-full mx-auto">
-        <Link href="/" className="text-xl font-bold">
+        <Link href="/" className="text-xl font-bold flex items-center gap-2">
+          <Image src="/images/icon-logo.png" alt="Holidaze" width={45} height={45} />
           Holidaze
         </Link>
         <nav className="hidden md:flex items-center gap-3">

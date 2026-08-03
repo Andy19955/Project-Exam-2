@@ -27,6 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <head>
+        <link rel="icon" href="/images/favicon.ico" />
+      </head>
       <body className="min-h-screen flex flex-col bg-(--background) text-(--text-primary)">
         <Script src="https://kit.fontawesome.com/235f170a74.js" crossOrigin="anonymous"></Script>
         <Header />
