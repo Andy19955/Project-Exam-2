@@ -189,7 +189,7 @@ export default function BookingForm({ maxGuests, price, bookings, venueId }: { m
 
   return (
     <>
-      <form className="flex flex-col gap-4 px-4 py-6 max-w-95.5" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-4 px-4 py-6" onSubmit={handleSubmit}>
         {bookingSuccess ? <p className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">{bookingSuccess}</p> : null}
         {bookingError ? <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{bookingError}</p> : null}
         <Calendar key={calendarKey} onChange={handleDateChange} value={dateRange} selectRange={true} minDate={new Date()} tileDisabled={disableBookedDates} className="min-w-full rounded-lg" />
