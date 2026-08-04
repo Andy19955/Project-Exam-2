@@ -26,7 +26,7 @@ export default function ProfileHeader({ profile, onEditProfile }: { profile: Pro
                 )}
               </div>
               <div className="max-w-2xl flex flex-col gap-3 pb-1">
-                <div className="flex items-center rounded-full w-fit border border-(--border) bg-(--background-soft) px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-(--text-muted)">
+                <div className="flex items-center rounded-full w-fit border border-(--border) bg-(--background-soft) px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-(--text-secondary)">
                   Profile
                 </div>
                 <div className="flex flex-col gap-1">

@@ -24,7 +24,7 @@ export default function SearchForm({ query = "", sort = "created", sortOrder = "
     <form onSubmit={handleSubmit} className="w-full max-w-5xl rounded-xl border border-white/70 bg-(--surface) p-4 shadow-lg">
       <div className="flex flex-col sm:flex-row gap-4 justify-between">
         <label className="flex flex-col gap-2 text-left flex-1">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-(--text-muted)">Search</span>
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-(--text-secondary)">Search</span>
           <input
             type="search"
             name="query"
@@ -34,7 +34,7 @@ export default function SearchForm({ query = "", sort = "created", sortOrder = "
           />
         </label>
         <label className="flex flex-col gap-2 text-left">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-(--text-muted)">Sort by</span>
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-(--text-secondary)">Sort by</span>
           <select
             name="sort"
             defaultValue={sort}
@@ -48,7 +48,7 @@ export default function SearchForm({ query = "", sort = "created", sortOrder = "
           </select>
         </label>
         <label className="flex flex-col gap-2 text-left">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-(--text-muted)">Order</span>
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-(--text-secondary)">Order</span>
           <select
             name="sortOrder"
             defaultValue={sortOrder}
