@@ -6,6 +6,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import LoginForm from "@/app/login/LoginForm";
 import { createBooking } from "@/api/bookings/createBooking";
+import { BookingFormProps } from "@/types/bookingFormProps";
 
 type DateValuePiece = Date | null;
 type DateValue = DateValuePiece | [DateValuePiece, DateValuePiece];
@@ -66,7 +67,7 @@ function getNights(dateRange: DateValue) {
   return Math.max(0, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
 }
 
-export default function BookingForm({ maxGuests, price, bookings, venueId }: { maxGuests: number; price: number; bookings?: Booking[]; venueId: string }) {
+export default function BookingForm({ maxGuests, price, bookings, venueId }: BookingFormProps) {
   const [dateRange, setDateRange] = useState<DateValue>(null);
   const [guestCount, setGuestCount] = useState(1);
   const [selectionError, setSelectionError] = useState(false);
