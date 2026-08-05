@@ -191,10 +191,10 @@ export default function BookingForm({ maxGuests, price, bookings, venueId }: Boo
   return (
     <>
       <form className="flex flex-col gap-4 px-4 py-6" onSubmit={handleSubmit}>
-        {bookingSuccess ? <p className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">{bookingSuccess}</p> : null}
-        {bookingError ? <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{bookingError}</p> : null}
+        {bookingSuccess ? <p className="rounded-2xl border border-(--success) bg-(--background-success) px-4 py-3 text-sm font-medium text-(--success)">{bookingSuccess}</p> : null}
+        {bookingError ? <p className="rounded-2xl border border-(--error) bg-(--background-error) px-4 py-3 text-sm font-medium text-(--error)">{bookingError}</p> : null}
         <Calendar key={calendarKey} onChange={handleDateChange} value={dateRange} selectRange={true} minDate={new Date()} tileDisabled={disableBookedDates} className="min-w-full rounded-lg" />
-        {selectionError ? <p className="text-sm font-medium text-amber-700">A booking must stay within an available date range. Choose dates that do not cross an occupied period.</p> : null}
+        {selectionError ? <p className="text-sm font-medium text-(--accent)">A booking must stay within an available date range. Choose dates that do not cross an occupied period.</p> : null}
         <div className="grid gap-3 rounded-3xl border border-(--border) bg-(--surface-dark) p-4 text-sm text-(--text-primary)">
           <div className="flex items-center justify-between gap-4">
             <span className="font-medium text-(--text-secondary)">Check-in</span>
