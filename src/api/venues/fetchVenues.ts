@@ -1,6 +1,12 @@
 import { venuesUrl } from "@/constants/apiUrls";
 import { SearchState } from "@/types/searchState";
 
+/**
+ * Fetch a list of venues from the API.
+ * @param {SearchState} [params] - Optional search, sort and sortOrder parameters.
+ * @returns {Promise<any>} Resolves with the parsed API response (expects a `data` array of venues).
+ * @throws {Error} When the network request fails or the API responds with an error.
+ */
 export async function fetchVenues({ query = "", sort = "created", sortOrder = "desc" }: SearchState = {}) {
   const trimmedQuery = query.trim();
   const baseUrl = trimmedQuery ? `${venuesUrl}/search` : venuesUrl;

@@ -3,6 +3,13 @@ import { getKey } from "@/api/helpers/getKey";
 import { useAuthStore } from "@/store/authStore";
 import type { ProfileData } from "@/types/profileData";
 
+/**
+ * Update a user's profile data (requires authentication).
+ * @param {string} name - Username of the profile to update.
+ * @param {ProfileData} profileData - The profile payload to send.
+ * @returns {Promise<any>} Resolves with the updated profile response.
+ * @throws {Error} When API key or access token is missing, or the API responds with an error.
+ */
 export async function updateProfile(name: string, profileData: ProfileData) {
   const apiKey = await getKey();
   if (!apiKey) {

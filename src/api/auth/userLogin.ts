@@ -1,6 +1,12 @@
 import { signInUrl } from "@/constants/apiUrls";
 import type { LoginData } from "@/schemas/loginFormSchema";
 
+/**
+ * Authenticate a user.
+ * @param {LoginData} loginData - Object containing `email` and `password`.
+ * @returns {Promise<any>} Resolves with the API response.
+ * @throws {Error} When the network request fails or credentials are invalid.
+ */
 export async function userLogin(loginData: LoginData) {
   const response = await fetch(signInUrl, {
     method: "POST",

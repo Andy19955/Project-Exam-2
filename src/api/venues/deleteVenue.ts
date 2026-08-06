@@ -2,6 +2,12 @@ import { venuesUrl } from "@/constants/apiUrls";
 import { getKey } from "@/api/helpers/getKey";
 import { useAuthStore } from "@/store/authStore";
 
+/**
+ * Delete a venue owned by the authenticated user.
+ * @param {string} id - Venue id to delete.
+ * @returns {Promise<Response>} Resolves with the fetch `Response` when deletion succeeds.
+ * @throws {Error} When API key or access token is missing, or deletion fails.
+ */
 export async function deleteVenue(id: string) {
   const apiKey = await getKey();
   if (!apiKey) {
