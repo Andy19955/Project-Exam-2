@@ -3,6 +3,12 @@ import { getKey } from "@/api/helpers/getKey";
 import { useAuthStore } from "@/store/authStore";
 import type { VenueData } from "@/types/venueData";
 
+/**
+ * Create a new venue.
+ * @param {VenueData} venueData - The venue payload to send to the API.
+ * @returns {Promise<any>} Resolves with the created venue response.
+ * @throws {Error} When API key or access token is missing, or the API returns an error.
+ */
 export async function createVenue(venueData: VenueData) {
   const apiKey = await getKey();
   if (!apiKey) {

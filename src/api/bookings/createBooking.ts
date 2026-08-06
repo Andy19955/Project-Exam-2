@@ -2,6 +2,12 @@ import { bookingsUrl } from "@/constants/apiUrls";
 import { getKey } from "@/api/helpers/getKey";
 import { useAuthStore } from "@/store/authStore";
 
+/**
+ * Create a booking for a venue.
+ * @param {{ dateFrom: string; dateTo: string; guests: number; venueId: string }} bookingData - Booking payload.
+ * @returns {Promise<any>} Resolves with the created booking response.
+ * @throws {Error} When API key or access token is missing, or the API responds with an error.
+ */
 export async function createBooking(bookingData: { dateFrom: string; dateTo: string; guests: number; venueId: string }) {
   const apiKey = await getKey();
   if (!apiKey) {
