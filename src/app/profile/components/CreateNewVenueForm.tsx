@@ -188,6 +188,7 @@ export default function NewVenueForm({ onCancel }: { onCancel: () => void }) {
             type="number"
             name="price"
             value={formData.price}
+              onFocus={(event) => event.currentTarget.select()}
             onChange={(event) => setFormData({ ...formData, price: Number(event.target.value) })}
             className={`w-full rounded-2xl border border-(--border) bg-(--surface-dark) px-4 py-3 text-(--text-primary) outline-none transition focus:border-(--border-dark) focus:bg-white ${fieldErrors.price ? "border-(--error) focus:border-(--error)" : ""}`}
             placeholder="Enter price"
@@ -200,6 +201,7 @@ export default function NewVenueForm({ onCancel }: { onCancel: () => void }) {
             type="number"
             name="maxGuests"
             value={formData.maxGuests}
+              onFocus={(event) => event.currentTarget.select()}
             onChange={(event) => setFormData({ ...formData, maxGuests: Number(event.target.value) })}
             className={`w-full rounded-2xl border border-(--border) bg-(--surface-dark) px-4 py-3 text-(--text-primary) outline-none transition focus:border-(--border-dark) focus:bg-white ${fieldErrors.maxGuests ? "border-(--error) focus:border-(--error)" : ""}`}
             placeholder="Enter max guests"
@@ -290,6 +292,7 @@ export default function NewVenueForm({ onCancel }: { onCancel: () => void }) {
               type="number"
               name="lat"
               value={formData.lat}
+              onFocus={(event) => event.currentTarget.select()}
               onChange={(event) => setFormData({ ...formData, lat: Number(event.target.value) })}
               className={`w-full rounded-2xl border border-(--border) bg-(--surface-dark) px-4 py-3 text-(--text-primary) outline-none transition focus:border-(--border-dark) focus:bg-white ${fieldErrors.lat ? "border-(--error) focus:border-(--error)" : ""}`}
               placeholder="Enter latitude"
@@ -302,6 +305,7 @@ export default function NewVenueForm({ onCancel }: { onCancel: () => void }) {
               type="number"
               name="lng"
               value={formData.lng}
+              onFocus={(event) => event.currentTarget.select()}
               onChange={(event) => setFormData({ ...formData, lng: Number(event.target.value) })}
               className={`w-full rounded-2xl border border-(--border) bg-(--surface-dark) px-4 py-3 text-(--text-primary) outline-none transition focus:border-(--border-dark) focus:bg-white ${fieldErrors.lng ? "border-(--error) focus:border-(--error)" : ""}`}
               placeholder="Enter longitude"
