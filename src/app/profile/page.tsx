@@ -22,6 +22,19 @@ export default function Profile() {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const userName = user?.name || "";
 
+  const handleProfileUpdate = (updatedProfile: ProfileType) => {
+    setProfile((currentProfile) => {
+      if (!currentProfile) return updatedProfile;
+
+      return {
+        ...currentProfile,
+        ...updatedProfile,
+        bookings: updatedProfile.bookings ?? currentProfile.bookings,
+        venues: updatedProfile.venues ?? currentProfile.venues,
+      };
+    });
+  };
+
   const refreshProfile = async () => {
     try {
       const result = await fetchProfile(userName);
@@ -71,7 +84,7 @@ export default function Profile() {
   return (
     <>
       <ProfileHeader profile={profile} onEditProfile={() => setIsEditingProfile(true)} />
-      {isEditingProfile ? <ProfileEditForm profile={profile} onUpdate={setProfile} onCancel={() => setIsEditingProfile(false)} /> : null}
+      {isEditingProfile ? <ProfileEditForm profile={profile} onUpdate={handleProfileUpdate} onCancel={() => setIsEditingProfile(false)} /> : null}
       <UpcomingBookings bookings={profile.bookings} onBookingCancelled={refreshProfile} />
       {profile.venueManager ? <ProfileVenues venues={profile.venues} /> : null}
     </>
