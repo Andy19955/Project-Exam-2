@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Profile as ProfileType } from "@/types/profile";
 import { fetchProfile } from "@/api/profiles/fetchProfile";
 import ProfileHeader from "./components/ProfileHeader";
@@ -72,6 +73,15 @@ export default function Profile() {
 
     fetchProfileData();
   }, [hydrated, userName]);
+  if (hydrated && !user)
+    return (
+      <div className="flex flex-col items-center gap-4 px-6 mt-20 text-center">
+        <h1 className="text-xl font-bold">You need to log in to view your profile.</h1>
+        <Link href="/login" className="rounded-md bg-(--primary) px-4 py-2 text-white hover:bg-(--primary-hover)">
+          Log in
+        </Link>
+      </div>
+    );
   if (loading)
     return (
       <>
