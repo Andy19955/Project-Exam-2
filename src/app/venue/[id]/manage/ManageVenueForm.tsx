@@ -51,7 +51,6 @@ export default function ManageVenueClient({ id }: { id: string }) {
 
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState("");
@@ -72,8 +71,8 @@ export default function ManageVenueClient({ id }: { id: string }) {
 
         setVenue(result.data);
         setFormData(getInitialFormData(result.data));
-      } catch (error) {
-        setError(error as Error);
+      } catch {
+        setNotFound(true);
       } finally {
         setLoading(false);
       }
@@ -86,12 +85,22 @@ export default function ManageVenueClient({ id }: { id: string }) {
     return <div>Loading venue...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
   if (notFound || !venue || !formData) {
-    return <div>Venue not found</div>;
+    return (
+      <div className="flex min-h-72 w-full flex-col items-center justify-center gap-3 rounded-4xl border border-(--border) bg-white/85 px-6 py-12 text-center shadow-lg">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-(--background-soft) text-2xl text-(--secondary)">
+          <i className="fa fa-map-marker"></i>
+        </div>
+        <h1 className="text-2xl font-semibold text-(--text-primary)">Venue not found</h1>
+        <p className="max-w-md text-(--text-secondary)">The venue may have been removed or the link may be incorrect.</p>
+        <Link
+          href="/profile"
+          className="mt-2 flex w-fit items-center gap-2 rounded-full border border-(--border-dark) bg-(--surface) px-4 py-2 text-sm font-semibold text-(--text-primary) shadow-sm transition hover:bg-(--surface-dark)"
+        >
+          <i className="fa fa-arrow-left"></i>Go back to your profile
+        </Link>
+      </div>
+    );
   }
 
   const isOwner = user?.name === venue.owner?.name;
