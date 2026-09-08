@@ -13,7 +13,6 @@ export default function VenueDetails({ id }: { id: string }) {
   const [venue, setVenue] = useState<Venue | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
   const user = useAuthStore((state) => state.user);
   const hydrated = useAuthStore((state) => state.hydrated);
 
@@ -22,9 +21,8 @@ export default function VenueDetails({ id }: { id: string }) {
       try {
         const result = await fetchVenue(id);
         setVenue(result.data);
-      } catch (error) {
+      } catch {
         setNotFound(true);
-        setError(error as Error);
       } finally {
         setLoading(false);
       }
@@ -34,8 +32,17 @@ export default function VenueDetails({ id }: { id: string }) {
   }, [id]);
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-  if (notFound || !venue) return <div>Venue not found</div>;
+  if (notFound || !venue) {
+    return (
+      <div className="flex min-h-72 w-full flex-col items-center justify-center gap-3 rounded-4xl border border-(--border) bg-white/85 px-6 py-12 text-center shadow-lg">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-(--background-soft) text-2xl text-(--secondary)">
+          <i className="fa fa-map-marker"></i>
+        </div>
+        <h1 className="text-2xl font-semibold text-(--text-primary)">Venue not found</h1>
+        <p className="max-w-md text-(--text-secondary)">The venue may have been removed or the link may be incorrect.</p>
+      </div>
+    );
+  }
 
   const locationText = venue.location.city && venue.location.country ? `${venue.location.city}, ${venue.location.country}` : venue.location.city || venue.location.country || "Location not available";
   const isOwner = hydrated && user?.name === venue.owner?.name;
