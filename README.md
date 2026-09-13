@@ -1,3 +1,5 @@
+![Holidaze landing page overview image](public/images/landing-page-overview.png)
+
 # Holidaze
 
 Holidaze is an accommodation booking app. It lets visitors browse venues, search and filter results, view venue details, and book stays. Logged-in users can manage their profile, bookings, and venues when they have manager access.
